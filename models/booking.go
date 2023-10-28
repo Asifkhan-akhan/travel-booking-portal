@@ -11,7 +11,8 @@ type Booking struct {
 	UserID      int       `json:"user_id" bson:"user_id" db:"user_id" structs:"user_id"`
 	ServiceType string    `json:"service_type" bson:"service_type" db:"service_type" structs:"service_type"` // Either Hotel or Car
 	ServiceID   int       `json:"service_id" bson:"service_id" db:"service_id" structs:"service_id"`
-	Date        time.Time `json:"date" bson:"date" db:"date" structs:"date"`
+	FromDate    time.Time `json:"from_date" bson:"from_date" db:"from_date" structs:"from_date"`
+	ToDate      time.Time `json:"to_date" bson:"to_date" db:"to_date" structs:"to_date"`
 	Confirmed   bool      `json:"confirmed" bson:"confirmed" db:"confirmed" structs:"confirmed"`
 	Penalty     bool      `json:"penalty" bson:"penalty" db:"penalty" structs:"penalty"`
 	Paid        bool      `json:"paid" bson:"paid" db:"paid" structs:"paid"`
