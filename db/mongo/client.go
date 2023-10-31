@@ -3,6 +3,8 @@ package mongo
 import (
 	"context"
 	"fmt"
+	"github.com/google/uuid"
+	"math/big"
 	"time"
 
 	"github.com/pkg/errors"
@@ -42,11 +44,18 @@ func NewClient() (db.DataStore, error) {
 	return &client{conn: cli}, nil
 }
 
-func (c *client) CreateOrUpdateBooking(booking *models.Booking) (int, error) {
-	if booking.ID == 0 {
+func generateUniqueID() int {
+	u := uuid.New()
+	// Convert UUID to a big.Int
+	idInt := new(big.Int)
+	idInt.SetString(u.String(), 16)
 
-		return 0, errors.New("ID is not empty")
-	}
+	// Convert the big.Int to an integer
+	return int(idInt.Int64())
+}
+
+func (c *client) CreateOrUpdateBooking(booking *models.Booking) (int, error) {
+
 	if booking.ServiceType != "Hotel" && booking.ServiceType != "CarRental" {
 
 		return 0, errors.New("Invalid service type passed")
@@ -59,26 +68,30 @@ func (c *client) CreateOrUpdateBooking(booking *models.Booking) (int, error) {
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(bokCollection)
 	filter := bson.D{{Key: "_id", Value: booking.ID}}
 	update := bson.D{{Key: "$set", Value: booking}}
-	// overlapCount, _ := collection.CountDocuments(context.TODO(), overlappingFilter)
 	result := collection.FindOne(context.TODO(), overlappingFilter)
 	//if no booking is find , create new one
 	if result.Err() == mongo.ErrNoDocuments {
-		_, err := collection.UpdateOne(context.TODO(), filter, update, options.Update().SetUpsert(true))
+		//create new
+		booking.ID = generateUniqueID()
+		_, err := collection.InsertOne(context.TODO(), booking)
 		if err != nil {
 
-			return 0, errors.Wrap(err, "failed to update or create booking")
+			return 0, errors.Wrap(err, "failed to create booking")
 		}
 	} else {
 		//update
+
 		if result.Err() == nil {
 			var dbbooking models.Booking
+
 			if err := result.Decode(&dbbooking); err != nil {
 				errors.New("Error decoding result:" + err.Error())
+
 			}
-			_, err := collection.UpdateOne(context.TODO(), filter, update, options.Update().SetUpsert(false))
+			_, err := collection.UpdateOne(context.TODO(), filter, update, options.Update())
 			if err != nil {
 
-				return 0, errors.Wrap(err, "failed to create booking")
+				return 0, errors.Wrap(err, "failed to update booking")
 			}
 		}
 	}
@@ -88,86 +101,120 @@ func (c *client) CreateOrUpdateBooking(booking *models.Booking) (int, error) {
 
 func (c *client) CreateOrUpdateCarRental(car *models.CarRental) (int, error) {
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(carCollection)
-	filter := bson.D{{Key: "_id", Value: car.ID}}
 
-	update := bson.D{{Key: "$set", Value: car}}
+	if car.ID != 0 {
 
-	opts := options.Update().SetUpsert(true)
+		filter := bson.D{{Key: "_id", Value: car.ID}}
 
-	_, err := collection.UpdateOne(context.TODO(), filter, update, opts)
+		opts := options.Update().SetUpsert(true)
 
-	if err != nil {
+		_, err := collection.UpdateOne(context.TODO(), filter, bson.D{{Key: "$set", Value: car}}, opts)
+		if err != nil {
 
-		return 0, errors.Wrap(err, "failed to update or create car rental")
+			return 0, errors.Wrap(err, "failed to update car rental")
+
+		}
+	} else {
+		// Generate a unique ID for the new car rental.
+		newID := generateUniqueID()
+		car.ID = newID
+
+		_, err := collection.InsertOne(context.TODO(), car)
+		if err != nil {
+			return 0, errors.Wrap(err, "failed to create car rental")
+		}
 	}
-
 	return car.ID, nil
+
 }
 
 func (c *client) CreateOrUpdateHotel(hotel *models.Hotel) (int, error) {
-	if hotel.ID == 0 {
+	if hotel.ID != 0 {
+		// ID is not empty; this is an update, not a creation.
+		collection := c.conn.Database(viper.GetString(config.DbName)).Collection(hotelCollection)
 
-		return 0, errors.New("ID can't be empty")
+		update := bson.D{{"$set", hotel}}
+
+		opts := options.Update().SetUpsert(true)
+
+		_, err := collection.UpdateOne(context.TODO(), bson.D{{"_id", hotel.ID}}, update, opts)
+
+		if err != nil {
+			return 0, errors.Wrap(err, "failed to update hotel")
+		}
+
+		return hotel.ID, nil
 	}
+
+	// Generate a unique ID for the new hotel.
+	newID := generateUniqueID()
+	hotel.ID = newID
 
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(hotelCollection)
 
-	update := bson.D{{"$set", hotel}}
-
-	opts := options.Update().SetUpsert(true)
-
-	_, err := collection.UpdateOne(context.TODO(), bson.D{{"_id", hotel.ID}}, update, opts)
-
+	_, err := collection.InsertOne(context.TODO(), hotel)
 	if err != nil {
-
-		return 0, errors.Wrap(err, "failed to update or create hotel")
+		return 0, errors.Wrap(err, "failed to create hotel")
 	}
 
-	return hotel.ID, nil
+	return newID, nil
 }
 
 func (c *client) CreateOrUpdateRoom(room *models.Room) (int, error) {
-	if room.HotelID == 0 {
+	if room.ID != 0 {
+		// ID is not empty; this is an update, not a creation.
+		collection := c.conn.Database(viper.GetString(config.DbName)).Collection(roomCollection)
+		update := bson.D{{"$set", room}}
+		opts := options.Update().SetUpsert(true)
 
-		return 0, errors.New("hotel id can't be empty")
+		_, err := collection.UpdateOne(context.TODO(), bson.D{{"_id", room.ID}}, update, opts)
+		if err != nil {
+			return 0, errors.Wrap(err, "failed to update room")
+		}
+
+		return room.ID, nil
 	}
+
+	// Generate a unique ID for the new room.
+	newID := generateUniqueID()
+	room.ID = newID
 
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(roomCollection)
 
-	filter := bson.D{{"_id", room.ID}}
-
-	update := bson.D{{"$set", room}}
-
-	opts := options.Update().SetUpsert(true)
-
-	_, err := collection.UpdateOne(context.TODO(), filter, update, opts)
-
+	_, err := collection.InsertOne(context.TODO(), room)
 	if err != nil {
-
-		return 0, errors.Wrap(err, "failed to update or create room")
+		return 0, errors.Wrap(err, "failed to create room")
 	}
 
-	return room.ID, nil
+	return newID, nil
 }
 
 func (c *client) CreateOrUpdateUser(user *models.User) (int, error) {
-	if user.Name == "" || user.Email == "" {
+	if user.ID != 0 {
+		// ID is not empty; this is an update, not a creation.
+		collection := c.conn.Database(viper.GetString(config.DbName)).Collection(userCollection)
+		opts := options.Update().SetUpsert(true)
 
-		return 0, errors.New("Name and Email can't be empty")
+		_, err := collection.UpdateOne(context.TODO(), bson.D{{"_id", user.ID}}, bson.D{{"$set", user}}, opts)
+		if err != nil {
+			return 0, errors.Wrap(err, "failed to update user")
+		}
+
+		return user.ID, nil
 	}
+
+	// Generate a unique ID for the new user.
+	newID := generateUniqueID()
+	user.ID = newID
 
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(userCollection)
 
-	opts := options.Update().SetUpsert(true)
-
-	_, err := collection.UpdateOne(context.TODO(), bson.D{{"_id", user.ID}}, bson.D{{"$set", user}}, opts)
-
+	_, err := collection.InsertOne(context.TODO(), user)
 	if err != nil {
-
-		return 0, errors.Wrap(err, "failed to update or create user")
+		return 0, errors.Wrap(err, "failed to create user")
 	}
 
-	return user.ID, nil
+	return newID, nil
 }
 
 // DeleteBooking implements db.DataStore.
