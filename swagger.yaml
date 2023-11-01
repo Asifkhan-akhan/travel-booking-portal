@@ -1,0 +1,616 @@
+swagger: "2.0"
+info:
+  description: "Travel Booking Portal API (Microservices)"
+  version: "1.0.0"
+  title: "Travel Booking Portal"
+
+host: "localhost:8080"
+basePath: "/"
+schemes:
+  - "http"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+paths:
+  /user:
+    post:
+      operationId: "CreateUser"
+      parameters:
+        - in: "body"
+          name: "user"
+          description: "User object to create "
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        201:
+          description: "User added successfully"
+          schema:
+            $ref: "#/definitions/User"
+        409:
+          description: "User already exists"
+        500:
+          description: "Internal Server Error"
+    put:
+      operationId: "UpdateUser"
+      parameters:
+        - in: "body"
+          name: "user"
+          description: "User object to update"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        201:
+          description: "User updated successfully"
+          schema:
+            $ref: "#/definitions/User"
+        404:
+          description: "User already exists"
+        500:
+          description: "Internal Server Error"
+    get:
+      operationId: "GetUsers"
+      responses:
+        200:
+          description: "List of Users retrieved successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+        404:
+          description: "User not found"
+        500:
+          description: "Internal Server Error"
+  /user/{userID}:
+    get:
+      operationId: "GetUser"
+      parameters:
+        - name: "userID"
+          in: "path"
+          description: "ID of the user to retrieve"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "user retrieved successfully"
+          schema:
+            $ref: "#/definitions/User"
+        404:
+          description: "User not found"
+        500:
+          description: "Internal Server Error"
+    delete:
+      operationId: "DeleteUser"
+      parameters:
+        - name: "userID"
+          in: "path"
+          description: "ID of the USer to delete"
+          required: true
+          type: "integer"
+      responses:
+        204:
+          description: "User deleted successfully"
+        404:
+          description: "USer not found"
+        500:
+          description: "Internal Server Error"
+
+  /booking:
+    post:
+      operationId: "CreateBooking"
+      parameters:
+        - in: "body"
+          name: "booking"
+          description: "Booking object to create "
+          required: true
+          schema:
+            $ref: "#/definitions/Booking"
+      responses:
+        201:
+          description: "Booking added successfully"
+          schema:
+            $ref: "#/definitions/Booking"
+        409:
+          description: "Booking already exists"
+        500:
+          description: "Internal Server Error"
+    put:
+      operationId: "UpdateBooking"
+      parameters:
+        - in: "body"
+          name: "booking"
+          description: "Booking object to update"
+          required: true
+          schema:
+            $ref: "#/definitions/Booking"
+      responses:
+        201:
+          description: "Booking updated successfully"
+          schema:
+            $ref: "#/definitions/Booking"
+        404:
+          description: "Booking not found"
+        500:
+          description: "Internal Server Error"
+    get:
+      operationId: "GetBookings"
+      responses:
+        200:
+          description: "List of bookings retrieved successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Booking"
+        500:
+          description: "Internal Server Error"
+  /booking/{bookingID}:
+    get:
+      operationId: "GetBooking"
+      parameters:
+        - name: "bookingID"
+          in: "path"
+          description: "ID of the booking to retrieve"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Booking retrieved successfully"
+          schema:
+            $ref: "#/definitions/Booking"
+        404:
+          description: "Booking not found"
+        500:
+          description: "Internal Server Error"
+    delete:
+      operationId: "DeleteBooking"
+      parameters:
+        - name: "bookingID"
+          in: "path"
+          description: "ID of the booking to delete"
+          required: true
+          type: "integer"
+      responses:
+        204:
+          description: "Booking deleted successfully"
+        404:
+          description: "Booking not found"
+        500:
+          description: "Internal Server Error"
+
+  /car:
+    post:
+      operationId: "CreateCar"
+      parameters:
+        - in: "body"
+          name: "car"
+          description: "CarRental object to create"
+          required: true
+          schema:
+            $ref: "#/definitions/CarRental"
+      responses:
+        201:
+          description: "CarRental added successfully"
+          schema:
+            $ref: "#/definitions/CarRental"
+        409:
+          description: "CarRental already exists"
+        500:
+          description: "Internal Server Error"
+    put:
+      operationId: "UpdateCar"
+      parameters:
+        - in: "body"
+          name: "car"
+          description: "CarRental object toupdate"
+          required: true
+          schema:
+            $ref: "#/definitions/CarRental"
+      responses:
+        201:
+          description: "CarRental updated successfully"
+          schema:
+            $ref: "#/definitions/CarRental"
+        404:
+          description: "CarRental not found"
+        500:
+          description: "Internal Server Error"
+    get:
+      operationId: "GetCars"
+      responses:
+        200:
+          description: "List of Cars retrieved successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/CarRental"
+        404:
+          description: "Cars not found"
+        500:
+          description: "Internal Server Error"
+  /car/{carID}:
+    get:
+      operationId: "GetCar"
+      parameters:
+        - name: "carID"
+          in: "path"
+          description: "ID of the Car to retrieve"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Car retrieved successfully"
+          schema:
+            $ref: "#/definitions/CarRental"
+        404:
+          description: "Car not found"
+        500:
+          description: "Internal Server Error"
+    delete:
+      operationId: "DeleteCar"
+      parameters:
+        - name: "carID"
+          in: "path"
+          description: "ID of the Car to delete"
+          required: true
+          type: "integer"
+      responses:
+        204:
+          description: "Car deleted successfully"
+        404:
+          description: "Car not found"
+        500:
+          description: "Internal Server Error"
+
+  /hotel:
+    post:
+      operationId: "CreateHotel"
+      parameters:
+        - in: "body"
+          name: "hotel"
+          description: "Hotel object to create"
+          required: true
+          schema:
+            $ref: "#/definitions/Hotel"
+      responses:
+        201:
+          description: "Hotel added successfully"
+          schema:
+            $ref: "#/definitions/Hotel"
+        409:
+          description: "Hotel already exists"
+        500:
+          description: "Internal Server Error"
+    put:
+      operationId: "UpdateHotel"
+      parameters:
+        - in: "body"
+          name: "hotel"
+          description: "Hotel object to  update"
+          required: true
+          schema:
+            $ref: "#/definitions/Hotel"
+      responses:
+        201:
+          description: "Hotel updated successfully"
+          schema:
+            $ref: "#/definitions/Hotel"
+        404:
+          description: "Hotel not found"
+        500:
+          description: "Internal Server Error"
+    get:
+      operationId: "GetHotels"
+      responses:
+        200:
+          description: "List of Hotels retrieved successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Hotel"
+        404:
+          description: "Hotels not found"
+        500:
+          description: "Internal Server Error"
+  /hotel/{hotelID}:
+    get:
+      operationId: "GetHotel"
+      parameters:
+        - name: "hotelID"
+          in: "path"
+          description: "ID of the Hotel to retrieve"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Hotel retrieved successfully"
+          schema:
+            $ref: "#/definitions/Hotel"
+        404:
+          description: "Hotel not found"
+        500:
+          description: "Internal Server Error"
+    delete:
+      operationId: "DeleteHotel"
+      parameters:
+        - name: "hotelID"
+          in: "path"
+          description: "ID of the Hotel to delete"
+          required: true
+          type: "integer"
+      responses:
+        204:
+          description: "Hotel deleted successfully"
+        404:
+          description: "Hotel not found"
+        500:
+          description: "Internal Server Error"
+  /room:
+    post:
+      operationId: "CreateRoom"
+      parameters:
+        - in: "body"
+          name: "room"
+          description: "Room object to create"
+          required: true
+          schema:
+            $ref: "#/definitions/Room"
+      responses:
+        201:
+          description: "Room added successfully"
+          schema:
+            $ref: "#/definitions/Room"
+        409:
+          description: "Room already exists"
+        500:
+          description: "Internal Server Error"
+    put:
+      operationId: "UpdateRoom"
+      parameters:
+        - in: "body"
+          name: "room"
+          description: "Room object to  update"
+          required: true
+          schema:
+            $ref: "#/definitions/Room"
+      responses:
+        201:
+          description: "Room updated successfully"
+          schema:
+            $ref: "#/definitions/Room"
+        404:
+          description: "Room not found"
+        500:
+          description: "Internal Server Error"
+    get:
+      operationId: "GetRooms"
+      responses:
+        200:
+          description: "List of Rooms retrieved successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Room"
+        404:
+          description: "Rooms not found"
+        500:
+          description: "Internal Server Error"
+  /room/{roomID}:
+    get:
+      operationId: "GetRoom"
+      parameters:
+        - name: "roomID"
+          in: "path"
+          description: "ID of the Room to retrieve"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Room retrieved successfully"
+          schema:
+            $ref: "#/definitions/Room"
+        404:
+          description: "Room not found"
+        500:
+          description: "Internal Server Error"
+    delete:
+      operationId: "DeleteRoom"
+      parameters:
+        - name: "roomID"
+          in: "path"
+          description: "ID of the Room to delete"
+          required: true
+          type: "integer"
+      responses:
+        204:
+          description: "Room deleted successfully"
+        404:
+          description: "Room not found"
+        500:
+          description: "Internal Server Error"
+
+  /hotel/{ID}/rooms:
+    get:
+      operationId: "getRoomsOfHotel"
+      parameters:
+        - in: "path"
+          name: "ID"
+          type: "integer"
+          required: true
+          description: "The ID of the hotel"
+      responses:
+        200:
+          description: "rooms in response"
+          schema:
+            $ref: "#/definitions/Room"
+        404:
+          description: "Rooms not found"
+        500:
+          description: "Internal server error"
+
+  /booking/search:
+    get:
+      operationId: "SearchBooking"
+      parameters:
+        - name: "userID"
+          in: "query"
+          description: "ID of the User to search bookings for"
+          required: true
+          type: "integer"
+        - name: "dateString"
+          in: "query"
+          description: "Date string to search for bookings (e.g., '2023-10-27')"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Bookings retrieved successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Booking"
+        400:
+          description: "Bad Request"
+        404:
+          description: "Bookings not found"
+        500:
+          description: "Internal Server Error"
+  /booking/confirmed:
+    get:
+      operationId: "ConfirmedBooking"
+      parameters:
+        - name: "userID"
+          in: "query"
+          description: "ID of the user for whom confirmed bookings are retrieved"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "List of confirmed bookings retrieved successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Booking"
+        404:
+          description: "No confirmed bookings found for the specified user"
+        500:
+          description: "Internal Server Error"
+  /booking/user/{userID}:
+    get:
+      operationId: "AllBookings"
+      parameters:
+        - name: "userID"
+          in: "path"
+          description: "ID of the user for whom all bookings are retrieved"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "List of all bookings retrieved successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Booking"
+        404:
+          description: "No confirmed bookings found for the specified user"
+        500:
+          description: "Internal Server Error"
+
+  /service/{ServiceID}/booking:
+    get:
+      operationId: "GetServiceBookings"
+      parameters:
+        - name: "ServiceID"
+          in: "path"
+          description: "ID of the service to retrieve bookings"
+          required: true
+          type: "integer"
+        - name: "FromDate"
+          in: "query"
+          description: "Start date for filtering bookings"
+          required: false
+          type: "string"
+        - name: "ToDate"
+          in: "query"
+          description: "End date for filtering bookings"
+          required: false
+          type: "string"
+      responses:
+        200:
+          description: "List of bookings for the service retrieved successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Booking"
+        404:
+          description: "Service not found or no bookings found for the service"
+        500:
+          description: "Internal Server Error"
+
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      email:
+        type: "string"
+
+  Hotel:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      location:
+        type: "string"
+      description:
+        type: "string"
+      rooms:
+        type: "integer"
+
+  Room:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      number:
+        type: "string"
+      hotel_id:
+        type: "integer"
+
+  CarRental:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      booked:
+        type: "boolean"
+  Booking:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      user_id:
+        type: "integer"
+      service_type:
+        type: "string"
+      service_id:
+        type: "integer"
+      from_date:
+        type: "string"
+        format: "date-time"
+      to_date:
+        type: "string"
+        format: "date-time"
+      confirmed:
+        type: "boolean"
+      penalty:
+        type: "boolean"
+      paid:
+        type: "boolean"

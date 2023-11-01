@@ -47,7 +47,7 @@ func main() {
 	searchDate := "2023, 10, 03"
 	bookings, err := c.SearchBooking(userID, searchDate)
 	if err != nil {
-		fmt.Println("Error searching for bookings: %v", err)
+		fmt.Println("Error searching for bookings: ", err)
 	}
 
 	// Log the results.
