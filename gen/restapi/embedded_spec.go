@@ -111,109 +111,6 @@ func init() {
         }
       }
     },
-    "/booking/confirmed": {
-      "get": {
-        "operationId": "ConfirmedBooking",
-        "parameters": [
-          {
-            "type": "integer",
-            "description": "ID of the user for whom confirmed bookings are retrieved",
-            "name": "userID",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of confirmed bookings retrieved successfully",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Booking"
-              }
-            }
-          },
-          "404": {
-            "description": "No confirmed bookings found for the specified user"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/booking/search": {
-      "get": {
-        "operationId": "SearchBooking",
-        "parameters": [
-          {
-            "type": "integer",
-            "description": "ID of the User to search bookings for",
-            "name": "userID",
-            "in": "query",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Date string to search for bookings (e.g., '2023-10-27')",
-            "name": "dateString",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Bookings retrieved successfully",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Booking"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Bookings not found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/booking/user/{userID}": {
-      "get": {
-        "operationId": "AllBookings",
-        "parameters": [
-          {
-            "type": "integer",
-            "description": "ID of the user for whom all bookings are retrieved",
-            "name": "userID",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of all bookings retrieved successfully",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Booking"
-              }
-            }
-          },
-          "404": {
-            "description": "No confirmed bookings found for the specified user"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
     "/booking/{bookingID}": {
       "get": {
         "operationId": "GetBooking",
@@ -258,6 +155,83 @@ func init() {
           },
           "404": {
             "description": "Booking not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/bookings/confirmed": {
+      "get": {
+        "tags": [
+          "bookings"
+        ],
+        "summary": "Retrieve confirmed bookings for a user",
+        "operationId": "GetConfirmedBookings",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "User ID for filtering confirmed bookings",
+            "name": "userID",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of confirmed bookings retrieved successfully",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Booking"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input parameters"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/bookings/datetime": {
+      "get": {
+        "tags": [
+          "bookings"
+        ],
+        "summary": "Retrieve bookings for a user based on a datetime",
+        "operationId": "GetBookingsByDateTime",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "User ID for filtering bookings",
+            "name": "userID",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Date and time for filtering bookings",
+            "name": "dateTime",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of bookings retrieved successfully",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Booking"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input parameters"
           },
           "500": {
             "description": "Internal Server Error"
@@ -472,34 +446,6 @@ func init() {
         }
       }
     },
-    "/hotel/{ID}/rooms": {
-      "get": {
-        "operationId": "getRoomsOfHotel",
-        "parameters": [
-          {
-            "type": "integer",
-            "description": "The ID of the hotel",
-            "name": "ID",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "rooms in response",
-            "schema": {
-              "$ref": "#/definitions/Room"
-            }
-          },
-          "404": {
-            "description": "Rooms not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
     "/hotel/{hotelID}": {
       "get": {
         "operationId": "GetHotel",
@@ -680,49 +626,6 @@ func init() {
         }
       }
     },
-    "/service/{ServiceID}/booking": {
-      "get": {
-        "operationId": "GetServiceBookings",
-        "parameters": [
-          {
-            "type": "integer",
-            "description": "ID of the service to retrieve bookings",
-            "name": "ServiceID",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Start date for filtering bookings",
-            "name": "FromDate",
-            "in": "query"
-          },
-          {
-            "type": "string",
-            "description": "End date for filtering bookings",
-            "name": "ToDate",
-            "in": "query"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of bookings for the service retrieved successfully",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Booking"
-              }
-            }
-          },
-          "404": {
-            "description": "Service not found or no bookings found for the service"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
     "/user": {
       "get": {
         "operationId": "GetUsers",
@@ -815,7 +718,7 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "user retrieved successfully",
+            "description": "User retrieved successfully",
             "schema": {
               "$ref": "#/definitions/User"
             }
@@ -1043,109 +946,6 @@ func init() {
         }
       }
     },
-    "/booking/confirmed": {
-      "get": {
-        "operationId": "ConfirmedBooking",
-        "parameters": [
-          {
-            "type": "integer",
-            "description": "ID of the user for whom confirmed bookings are retrieved",
-            "name": "userID",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of confirmed bookings retrieved successfully",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Booking"
-              }
-            }
-          },
-          "404": {
-            "description": "No confirmed bookings found for the specified user"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/booking/search": {
-      "get": {
-        "operationId": "SearchBooking",
-        "parameters": [
-          {
-            "type": "integer",
-            "description": "ID of the User to search bookings for",
-            "name": "userID",
-            "in": "query",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Date string to search for bookings (e.g., '2023-10-27')",
-            "name": "dateString",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Bookings retrieved successfully",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Booking"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Bookings not found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/booking/user/{userID}": {
-      "get": {
-        "operationId": "AllBookings",
-        "parameters": [
-          {
-            "type": "integer",
-            "description": "ID of the user for whom all bookings are retrieved",
-            "name": "userID",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of all bookings retrieved successfully",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Booking"
-              }
-            }
-          },
-          "404": {
-            "description": "No confirmed bookings found for the specified user"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
     "/booking/{bookingID}": {
       "get": {
         "operationId": "GetBooking",
@@ -1190,6 +990,83 @@ func init() {
           },
           "404": {
             "description": "Booking not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/bookings/confirmed": {
+      "get": {
+        "tags": [
+          "bookings"
+        ],
+        "summary": "Retrieve confirmed bookings for a user",
+        "operationId": "GetConfirmedBookings",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "User ID for filtering confirmed bookings",
+            "name": "userID",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of confirmed bookings retrieved successfully",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Booking"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input parameters"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/bookings/datetime": {
+      "get": {
+        "tags": [
+          "bookings"
+        ],
+        "summary": "Retrieve bookings for a user based on a datetime",
+        "operationId": "GetBookingsByDateTime",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "User ID for filtering bookings",
+            "name": "userID",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Date and time for filtering bookings",
+            "name": "dateTime",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of bookings retrieved successfully",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Booking"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input parameters"
           },
           "500": {
             "description": "Internal Server Error"
@@ -1404,34 +1281,6 @@ func init() {
         }
       }
     },
-    "/hotel/{ID}/rooms": {
-      "get": {
-        "operationId": "getRoomsOfHotel",
-        "parameters": [
-          {
-            "type": "integer",
-            "description": "The ID of the hotel",
-            "name": "ID",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "rooms in response",
-            "schema": {
-              "$ref": "#/definitions/Room"
-            }
-          },
-          "404": {
-            "description": "Rooms not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
     "/hotel/{hotelID}": {
       "get": {
         "operationId": "GetHotel",
@@ -1612,49 +1461,6 @@ func init() {
         }
       }
     },
-    "/service/{ServiceID}/booking": {
-      "get": {
-        "operationId": "GetServiceBookings",
-        "parameters": [
-          {
-            "type": "integer",
-            "description": "ID of the service to retrieve bookings",
-            "name": "ServiceID",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Start date for filtering bookings",
-            "name": "FromDate",
-            "in": "query"
-          },
-          {
-            "type": "string",
-            "description": "End date for filtering bookings",
-            "name": "ToDate",
-            "in": "query"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of bookings for the service retrieved successfully",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Booking"
-              }
-            }
-          },
-          "404": {
-            "description": "Service not found or no bookings found for the service"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
     "/user": {
       "get": {
         "operationId": "GetUsers",
@@ -1747,7 +1553,7 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "user retrieved successfully",
+            "description": "User retrieved successfully",
             "schema": {
               "$ref": "#/definitions/User"
             }

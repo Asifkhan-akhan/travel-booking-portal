@@ -54,7 +54,7 @@ func NewGetUserOK() *GetUserOK {
 /*
 GetUserOK describes a response with status code 200, with default header values.
 
-user retrieved successfully
+User retrieved successfully
 */
 type GetUserOK struct {
 	Payload *models.User

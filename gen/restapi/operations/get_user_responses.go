@@ -17,7 +17,7 @@ import (
 const GetUserOKCode int = 200
 
 /*
-GetUserOK user retrieved successfully
+GetUserOK User retrieved successfully
 
 swagger:response getUserOK
 */

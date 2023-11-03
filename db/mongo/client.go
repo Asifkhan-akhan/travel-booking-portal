@@ -3,10 +3,9 @@ package mongo
 import (
 	"context"
 	"fmt"
-	"github.com/google/uuid"
 	"math/big"
-	"time"
 
+	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
@@ -15,7 +14,6 @@ import (
 
 	"travel-booking-portal/config"
 	"travel-booking-portal/db"
-
 	"travel-booking-portal/models"
 )
 
@@ -79,7 +77,6 @@ func (c *client) CreateOrUpdateBooking(booking *models.Booking) (int, error) {
 			return 0, errors.Wrap(err, "failed to create booking")
 		}
 	} else {
-		//update
 
 		if result.Err() == nil {
 			var dbbooking models.Booking
@@ -130,7 +127,7 @@ func (c *client) CreateOrUpdateCarRental(car *models.CarRental) (int, error) {
 
 func (c *client) CreateOrUpdateHotel(hotel *models.Hotel) (int, error) {
 	if hotel.ID != 0 {
-		// ID is not empty; this is an update, not a creation.
+
 		collection := c.conn.Database(viper.GetString(config.DbName)).Collection(hotelCollection)
 
 		update := bson.D{{"$set", hotel}}
@@ -231,6 +228,7 @@ func (c *client) DeleteBooking(bookingID int) error {
 // DeleteCarRental implements db.DataStore.
 func (c *client) DeleteCarRental(carID int) error {
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(carCollection)
+
 	if _, err := collection.DeleteOne(context.TODO(), bson.M{"_id": carID}); err != nil {
 
 		return errors.Wrap(err, "failed to delete Car")
@@ -272,219 +270,130 @@ func (c *client) DeleteUser(userID int) error {
 	return nil
 }
 
-// GetBooking implements db.DataStore.
-func (c *client) GetBooking(bookingID int) ([]*models.Booking, error) {
+// ListBooking retrieves bookings based on the provided search parameters.
+func (c *client) ListBooking(searchCriteria map[string]interface{}) ([]*models.Booking, error) {
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(bokCollection)
 	var bookings []*models.Booking
 	var cursor *mongo.Cursor
 	var err error
-
-	if bookingID == 0 {
-		cursor, err = collection.Find(context.TODO(), bson.D{}, options.Find().SetSort(bson.D{{"_id", 1}}))
-	} else {
-		// If bookingID is not 0, we're retrieving a specific booking
-		cursor, err = collection.Find(context.TODO(), bson.M{"_id": bookingID})
+	// Create a filter based on the search parameters
+	filter := bson.M{}
+	// Check if specific search parameters are provided and construct the filter accordingly
+	if searchCriteria != nil {
+		for key, value := range searchCriteria {
+			filter[key] = value
+		}
 	}
 
+	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{"_id", 1}}))
 	if err != nil {
-
 		return nil, err
 	}
-
 	if err := cursor.All(context.TODO(), &bookings); err != nil {
-
 		return nil, err
 	}
 
 	return bookings, nil
 }
 
-// GetCarRental implements db.DataStore.
-func (c *client) GetCarRental(carID int) ([]*models.CarRental, error) {
+// ListCarRental implements db.DataStore.
+func (c *client) ListCarRental(searchCriteria map[string]interface{}) ([]*models.CarRental, error) {
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(carCollection)
 	var cars []*models.CarRental
 	var cursor *mongo.Cursor
 	var err error
 
-	if carID == 0 {
-		// If bookingID is 0, we're retrieving all cars
-		cursor, err = collection.Find(context.TODO(), bson.D{}, options.Find().SetSort(bson.D{{"_id", 1}}))
-		fmt.Println("running id 0")
-	} else {
-		// If bookingID is not 0, we're retrieving a specific car
-		cursor, err = collection.Find(context.TODO(), bson.M{"_id": carID})
+	filter := bson.M{}
+	// Populate the filter based on the provided search criteria.
+	if searchCriteria != nil {
+		for key, value := range searchCriteria {
+			filter[key] = value
+		}
 	}
 
+	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{"_id", 1}}))
 	if err != nil {
-
 		return nil, err
-
 	}
-
 	if err := cursor.All(context.TODO(), &cars); err != nil {
-		fmt.Print("theser is and error\n", err)
-
+		fmt.Print("there is an error\n", err)
 		return nil, err
 	}
 
 	return cars, nil
 }
 
-// GetHotel implements db.DataStore.
-func (c *client) GetHotel(hotelID int) ([]*models.Hotel, error) {
+// ListHotel implements db.DataStore.
+func (c *client) ListHotel(searchCriteria map[string]interface{}) ([]*models.Hotel, error) {
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(hotelCollection)
-	var hotel []*models.Hotel
+	var hotels []*models.Hotel
 	var cursor *mongo.Cursor
 	var err error
 
-	if hotelID == 0 {
-		// If bookingID is 0, we're retrieving all cars
-		cursor, err = collection.Find(context.TODO(), bson.D{}, options.Find().SetSort(bson.D{{"_id", 1}}))
-	} else {
-		// If bookingID is not 0, we're retrieving a specific car
-		cursor, err = collection.Find(context.TODO(), bson.M{"_id": hotelID})
+	filter := bson.M{}
+
+	if searchCriteria != nil {
+		for key, value := range searchCriteria {
+			filter[key] = value
+		}
 	}
 
+	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{"_id", 1}}))
 	if err != nil {
-
+		return nil, err
+	}
+	if err := cursor.All(context.TODO(), &hotels); err != nil {
 		return nil, err
 	}
 
-	if err := cursor.All(context.TODO(), &hotel); err != nil {
-
-		return nil, err
-	}
-
-	return hotel, nil
+	return hotels, nil
 }
 
-// GetRoom implements db.DataStore.
-func (c *client) GetRoom(roomID int) ([]*models.Room, error) {
-
+// ListRoom implements db.DataStore.
+func (c *client) ListRoom(searchCriteria map[string]interface{}) ([]*models.Room, error) {
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(roomCollection)
-	var room []*models.Room
+	var rooms []*models.Room
 	var cursor *mongo.Cursor
 	var err error
 
-	if roomID == 0 {
-		cursor, err = collection.Find(context.TODO(), bson.D{}, options.Find().SetSort(bson.D{{"_id", 1}}))
-	} else {
-		cursor, err = collection.Find(context.TODO(), bson.M{"_id": roomID})
+	filter := bson.M{}
+	if searchCriteria != nil {
+		for key, value := range searchCriteria {
+			filter[key] = value
+		}
 	}
-
+	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{"_id", 1}}))
 	if err != nil {
-
+		return nil, err
+	}
+	if err := cursor.All(context.TODO(), &rooms); err != nil {
 		return nil, err
 	}
 
-	if err := cursor.All(context.TODO(), &room); err != nil {
-
-		return nil, err
-	}
-
-	return room, nil
+	return rooms, nil
 }
 
-// GetUser implements db.DataStore.
-func (c *client) GetUser(userID int) ([]*models.User, error) {
+// ListUser implements db.DataStore.
+func (c *client) ListUser(searchCriteria map[string]interface{}) ([]*models.User, error) {
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(userCollection)
-	var user []*models.User
+	var users []*models.User
 	var cursor *mongo.Cursor
 	var err error
 
-	if userID == 0 {
-		// If bookingID is 0, we're retrieving all cars
-		cursor, err = collection.Find(context.TODO(), bson.D{}, options.Find().SetSort(bson.D{{Key: "_id", Value: 1}}))
-	} else {
-		// If bookingID is not 0, we're retrieving a specific car
-		cursor, err = collection.Find(context.TODO(), bson.M{"_id": userID})
+	filter := bson.M{}
+	if searchCriteria != nil {
+		for key, value := range searchCriteria {
+			filter[key] = value
+		}
 	}
 
+	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{"_id", 1}}))
 	if err != nil {
-
+		return nil, err
+	}
+	if err := cursor.All(context.TODO(), &users); err != nil {
 		return nil, err
 	}
 
-	if err := cursor.All(context.TODO(), &user); err != nil {
-
-		return nil, err
-	}
-
-	return user, nil
-}
-func (c *client) ConfirmedBooking(userid int) ([]*models.Booking, error) {
-	// Define a filter to match bookings with the specified user ID and date.
-	filter := bson.D{
-		{Key: "user_id", Value: userid},
-		{Key: "confirmed", Value: true},
-	}
-
-	// Create a slice to store the results.
-	var bookings []*models.Booking
-
-	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(bokCollection)
-
-	cursor, err := collection.Find(context.TODO(), filter)
-	if err != nil {
-
-		return nil, errors.Wrap(err, "failed to search for bookings")
-	}
-	defer cursor.Close(context.TODO())
-
-	for cursor.Next(context.TODO()) {
-		var booking models.Booking
-		if err := cursor.Decode(&booking); err != nil {
-
-			return nil, errors.Wrap(err, "failed to decode booking")
-		}
-		bookings = append(bookings, &booking)
-	}
-
-	if err := cursor.Err(); err != nil {
-
-		return nil, errors.Wrap(err, "cursor error")
-	}
-
-	return bookings, nil
-}
-func (c *client) SearchBooking(userid int, dateString string) ([]*models.Booking, error) {
-	dateTime, err := time.Parse("2006, 01, 02", dateString)
-	if err != nil {
-
-		return nil, errors.Wrap(err, "failed to parse date string")
-	}
-
-	startOfDay := time.Date(dateTime.Year(), dateTime.Month(), dateTime.Day(), 0, 0, 0, 0, time.UTC)
-
-	filter := bson.D{
-		{Key: "user_id", Value: userid},
-		{Key: "from_date", Value: startOfDay},
-	}
-
-	var bookings []*models.Booking
-
-	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(bokCollection)
-
-	cursor, err := collection.Find(context.TODO(), filter)
-	if err != nil {
-
-		return nil, errors.Wrap(err, "failed to search for bookings")
-	}
-	defer cursor.Close(context.TODO())
-
-	for cursor.Next(context.TODO()) {
-		var booking models.Booking
-		if err := cursor.Decode(&booking); err != nil {
-
-			return nil, errors.Wrap(err, "failed to decode booking")
-		}
-		bookings = append(bookings, &booking)
-	}
-
-	if err := cursor.Err(); err != nil {
-
-		return nil, errors.Wrap(err, "cursor error")
-	}
-
-	return bookings, nil
+	return users, nil
 }

@@ -6,11 +6,12 @@ package client
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"travel-booking-portal/gen/client/operations"
-
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+
+	"travel-booking-portal/gen/client/bookings"
+	"travel-booking-portal/gen/client/operations"
 )
 
 // Default travel booking portal HTTP client.
@@ -55,6 +56,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *TravelBook
 
 	cli := new(TravelBookingPortal)
 	cli.Transport = transport
+	cli.Bookings = bookings.New(transport, formats)
 	cli.Operations = operations.New(transport, formats)
 	return cli
 }
@@ -100,6 +102,8 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 
 // TravelBookingPortal is a client for travel booking portal
 type TravelBookingPortal struct {
+	Bookings bookings.ClientService
+
 	Operations operations.ClientService
 
 	Transport runtime.ClientTransport
@@ -108,5 +112,6 @@ type TravelBookingPortal struct {
 // SetTransport changes the transport on the client and all its subresources
 func (c *TravelBookingPortal) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
+	c.Bookings.SetTransport(transport)
 	c.Operations.SetTransport(transport)
 }

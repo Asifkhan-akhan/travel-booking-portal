@@ -131,7 +131,7 @@ func Test_client_GetBooking(t *testing.T) {
 	}
 
 	type args struct {
-		id int
+		searchParams map[string]interface{}
 	}
 
 	tests := []struct {
@@ -140,84 +140,29 @@ func Test_client_GetBooking(t *testing.T) {
 		want    []*models.Booking
 		wantErr bool
 	}{
-
 		{
 			name:    "success - all bookings get",
-			args:    args{id: 0},
+			args:    args{searchParams: map[string]interface{}{}}, // No filter, should return all bookings
 			want:    []*models.Booking{booking},
 			wantErr: false,
 		},
 		{
-			name:    "success -  getting sing document",
-			args:    args{id: createdBookingID},
+			name:    "success - getting a specific document",
+			args:    args{searchParams: map[string]interface{}{"_id": createdBookingID}},
 			want:    []*models.Booking{booking},
 			wantErr: false,
 		},
+		// Add more test cases with different search parameters as needed
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			booking, err := c.GetBooking(tt.args.id)
+			bookings, err := c.ListBooking(tt.args.searchParams)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetBooking() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			t.Logf("Got %v", booking)
+			t.Logf("Got %v", bookings)
 		})
-	}
-
-}
-
-func TestSearchBooking(t *testing.T) {
-	// Set up a test MongoDB client (replace with your actual setup).
-	c, _ := NewClient()
-
-	// Create some sample bookings with different user IDs and dates.
-	booking1 := &models.Booking{
-		ID:          1,
-		UserID:      101,
-		ServiceType: "Hotel",
-		ServiceID:   1,
-		FromDate:    time.Date(2023, time.October, 26, 0, 0, 0, 0, time.UTC),
-		Confirmed:   true,
-		Penalty:     false,
-		Paid:        true,
-	}
-	booking2 := &models.Booking{
-		ID:          2,
-		UserID:      102,
-		ServiceType: "Hotel",
-		ServiceID:   2,
-		FromDate:    time.Date(2023, time.October, 27, 0, 0, 0, 0, time.UTC),
-		Confirmed:   true,
-		Penalty:     false,
-		Paid:        true,
-	}
-	booking3 := &models.Booking{
-		ID:          3,
-		UserID:      101,
-		ServiceType: "Hotel",
-		ServiceID:   3,
-		FromDate:    time.Date(2023, time.October, 26, 0, 0, 0, 0, time.UTC),
-		Confirmed:   true,
-		Penalty:     false,
-		Paid:        true,
-	}
-
-	// Create bookings in the database (replace with your actual creation logic).
-	c.CreateOrUpdateBooking(booking1)
-	c.CreateOrUpdateBooking(booking2)
-	c.CreateOrUpdateBooking(booking3)
-
-	// Search for bookings for a specific user and date.
-	userID := 101
-	bookings, err := c.SearchBooking(userID, "2023, 10, 26")
-	if err != nil {
-		t.Errorf("Error searching for bookings: %v", err)
-	}
-
-	// Log the results.
-	for _, booking := range bookings {
-		t.Logf("Booking ID: %d, User ID: %d, Date: %s", booking.ID, booking.UserID, booking.FromDate)
 	}
 }

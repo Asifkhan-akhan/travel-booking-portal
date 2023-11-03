@@ -12,7 +12,6 @@ consumes:
   - "application/json"
 produces:
   - "application/json"
-
 paths:
   /user:
     post:
@@ -68,14 +67,14 @@ paths:
     get:
       operationId: "GetUser"
       parameters:
-        - name: "userID"
-          in: "path"
-          description: "ID of the user to retrieve"
+        - name: userID
+          in: path
           required: true
           type: "integer"
+          description: "ID of the user to retrieve"
       responses:
         200:
-          description: "user retrieved successfully"
+          description: "User retrieved successfully"
           schema:
             $ref: "#/definitions/User"
         404:
@@ -144,6 +143,7 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Booking"
+
         500:
           description: "Internal Server Error"
   /booking/{bookingID}:
@@ -431,59 +431,45 @@ paths:
         500:
           description: "Internal Server Error"
 
-  /hotel/{ID}/rooms:
+  /bookings/datetime:
     get:
-      operationId: "getRoomsOfHotel"
-      parameters:
-        - in: "path"
-          name: "ID"
-          type: "integer"
-          required: true
-          description: "The ID of the hotel"
-      responses:
-        200:
-          description: "rooms in response"
-          schema:
-            $ref: "#/definitions/Room"
-        404:
-          description: "Rooms not found"
-        500:
-          description: "Internal server error"
-
-  /booking/search:
-    get:
-      operationId: "SearchBooking"
+      tags:
+        - bookings
+      operationId: "GetBookingsByDateTime"
+      summary: "Retrieve bookings for a user based on a datetime"
       parameters:
         - name: "userID"
           in: "query"
-          description: "ID of the User to search bookings for"
+          description: "User ID for filtering bookings"
           required: true
           type: "integer"
-        - name: "dateString"
+        - name: "dateTime"
           in: "query"
-          description: "Date string to search for bookings (e.g., '2023-10-27')"
+          description: "Date and time for filtering bookings"
           required: true
-          type: "string"
+          type: "string"  # You may want to specify a valid format for the datetime input (e.g., "date-time").
       responses:
         200:
-          description: "Bookings retrieved successfully"
+          description: "List of bookings retrieved successfully"
           schema:
             type: "array"
             items:
               $ref: "#/definitions/Booking"
         400:
-          description: "Bad Request"
-        404:
-          description: "Bookings not found"
+          description: "Bad Request - Invalid input parameters"
         500:
           description: "Internal Server Error"
-  /booking/confirmed:
+
+  /bookings/confirmed:
     get:
-      operationId: "ConfirmedBooking"
+      tags:
+        - bookings
+      operationId: "GetConfirmedBookings"
+      summary: "Retrieve confirmed bookings for a user"
       parameters:
         - name: "userID"
           in: "query"
-          description: "ID of the user for whom confirmed bookings are retrieved"
+          description: "User ID for filtering confirmed bookings"
           required: true
           type: "integer"
       responses:
@@ -493,59 +479,8 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Booking"
-        404:
-          description: "No confirmed bookings found for the specified user"
-        500:
-          description: "Internal Server Error"
-  /booking/user/{userID}:
-    get:
-      operationId: "AllBookings"
-      parameters:
-        - name: "userID"
-          in: "path"
-          description: "ID of the user for whom all bookings are retrieved"
-          required: true
-          type: "integer"
-      responses:
-        200:
-          description: "List of all bookings retrieved successfully"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Booking"
-        404:
-          description: "No confirmed bookings found for the specified user"
-        500:
-          description: "Internal Server Error"
-
-  /service/{ServiceID}/booking:
-    get:
-      operationId: "GetServiceBookings"
-      parameters:
-        - name: "ServiceID"
-          in: "path"
-          description: "ID of the service to retrieve bookings"
-          required: true
-          type: "integer"
-        - name: "FromDate"
-          in: "query"
-          description: "Start date for filtering bookings"
-          required: false
-          type: "string"
-        - name: "ToDate"
-          in: "query"
-          description: "End date for filtering bookings"
-          required: false
-          type: "string"
-      responses:
-        200:
-          description: "List of bookings for the service retrieved successfully"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Booking"
-        404:
-          description: "Service not found or no bookings found for the service"
+        400:
+          description: "Bad Request - Invalid input parameters"
         500:
           description: "Internal Server Error"
 

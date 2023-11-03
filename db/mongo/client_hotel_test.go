@@ -29,17 +29,6 @@ func Test_client_CreateOrUpdateHotel(t *testing.T) {
 			}},
 			wantErr: false,
 		},
-		{
-			name: "fail - fail to add hotel in db",
-			args: args{hotel: &models.Hotel{
-				ID:          0,
-				Name:        "Invalid Hotel",
-				Location:    "Invalid Location",
-				Description: "An invalid hotel",
-				Rooms:       0, // Invalid number of rooms
-			}},
-			wantErr: false,
-		},
 	}
 
 	for _, tt := range tests {
@@ -97,7 +86,7 @@ func Test_client_DeleteHotel(t *testing.T) {
 		})
 	}
 }
-func Test_client_GetHotels(t *testing.T) {
+func Test_client_ListHotels(t *testing.T) {
 	os.Setenv("DB_PORT", "27017")
 	os.Setenv("DB_HOST", "localhost")
 	c, _ := NewClient()
@@ -119,41 +108,38 @@ func Test_client_GetHotels(t *testing.T) {
 		t.Logf("Hotel created with ID: %d", createdHotelID)
 	}
 
-	type args struct {
-		id int
-	}
-
 	tests := []struct {
-		name    string
-		args    args
-		want    []*models.Hotel
-		wantErr bool
+		name           string
+		searchCriteria map[string]interface{}
+		want           []*models.Hotel
+		wantErr        bool
 	}{
 		{
-			name:    "success - all hotels get",
-			args:    args{id: 0},
-			want:    []*models.Hotel{hotel}, // You can modify this as needed
-			wantErr: false,
+			name:           "success - all hotels get",
+			searchCriteria: map[string]interface{}{}, // No search criteria
+			want:           []*models.Hotel{hotel},   // You can modify this as needed
+			wantErr:        false,
 		},
 		{
-			name:    "success - getting a single hotel",
-			args:    args{id: createdHotelID},
-			want:    []*models.Hotel{hotel}, // You can modify this as needed
-			wantErr: false,
+			name:           "success - getting a single hotel",
+			searchCriteria: map[string]interface{}{"id": createdHotelID}, // Search by ID
+			want:           []*models.Hotel{hotel},                       // You can modify this as needed
+			wantErr:        false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			hotels, err := c.GetHotel(tt.args.id)
+			hotels, err := c.ListHotel(tt.searchCriteria)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetHotels() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ListHotel() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			t.Logf("Got %v", hotels)
 		})
 	}
 }
+
 func Test_client_CreateOrUpdateRoom(t *testing.T) {
 	os.Setenv("DB_PORT", "27017")
 	os.Setenv("DB_HOST", "localhost") // Corrected DB_HOST value
@@ -238,7 +224,7 @@ func Test_client_DeleteRoom(t *testing.T) {
 	}
 }
 
-func Test_client_GetRooms(t *testing.T) {
+func Test_client_ListRooms(t *testing.T) {
 	os.Setenv("DB_PORT", "27017")
 	os.Setenv("DB_HOST", "localhost")
 	c, _ := NewClient()
@@ -258,35 +244,31 @@ func Test_client_GetRooms(t *testing.T) {
 		t.Logf("Room created with ID: %d", createdRoomID)
 	}
 
-	type args struct {
-		id int
-	}
-
 	tests := []struct {
-		name    string
-		args    args
-		want    []*models.Room
-		wantErr bool
+		name           string
+		searchCriteria map[string]interface{}
+		want           []*models.Room
+		wantErr        bool
 	}{
 		{
-			name:    "success - all rooms get",
-			args:    args{id: 0},
-			want:    []*models.Room{room}, // You can modify this as needed
-			wantErr: false,
+			name:           "success - all rooms get",
+			searchCriteria: map[string]interface{}{}, // No search criteria
+			want:           []*models.Room{room},
+			wantErr:        false,
 		},
 		{
-			name:    "success - getting a single room",
-			args:    args{id: createdRoomID},
-			want:    []*models.Room{room}, // You can modify this as needed
-			wantErr: false,
+			name:           "success - getting a single room",
+			searchCriteria: map[string]interface{}{"id": createdRoomID}, // Search by ID
+			want:           []*models.Room{room},
+			wantErr:        false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rooms, err := c.GetRoom(tt.args.id)
+			rooms, err := c.ListRoom(tt.searchCriteria)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetRooms() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ListRooms() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			t.Logf("Got %v", rooms)
