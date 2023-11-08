@@ -13,6 +13,51 @@ import (
 	"travel-booking-portal/gen/models"
 )
 
+// UpdateHotelOKCode is the HTTP code returned for type UpdateHotelOK
+const UpdateHotelOKCode int = 200
+
+/*
+UpdateHotelOK  updated successfully
+
+swagger:response updateHotelOK
+*/
+type UpdateHotelOK struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Hotel `json:"body,omitempty"`
+}
+
+// NewUpdateHotelOK creates UpdateHotelOK with default headers values
+func NewUpdateHotelOK() *UpdateHotelOK {
+
+	return &UpdateHotelOK{}
+}
+
+// WithPayload adds the payload to the update hotel o k response
+func (o *UpdateHotelOK) WithPayload(payload *models.Hotel) *UpdateHotelOK {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the update hotel o k response
+func (o *UpdateHotelOK) SetPayload(payload *models.Hotel) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *UpdateHotelOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(200)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // UpdateHotelCreatedCode is the HTTP code returned for type UpdateHotelCreated
 const UpdateHotelCreatedCode int = 201
 
@@ -56,6 +101,31 @@ func (o *UpdateHotelCreated) WriteResponse(rw http.ResponseWriter, producer runt
 			panic(err) // let the recovery middleware deal with this
 		}
 	}
+}
+
+// UpdateHotelBadRequestCode is the HTTP code returned for type UpdateHotelBadRequest
+const UpdateHotelBadRequestCode int = 400
+
+/*
+UpdateHotelBadRequest Bad Request - The request is invalid or contains errors
+
+swagger:response updateHotelBadRequest
+*/
+type UpdateHotelBadRequest struct {
+}
+
+// NewUpdateHotelBadRequest creates UpdateHotelBadRequest with default headers values
+func NewUpdateHotelBadRequest() *UpdateHotelBadRequest {
+
+	return &UpdateHotelBadRequest{}
+}
+
+// WriteResponse to the client
+func (o *UpdateHotelBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(400)
 }
 
 // UpdateHotelNotFoundCode is the HTTP code returned for type UpdateHotelNotFound

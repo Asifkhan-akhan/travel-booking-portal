@@ -13,6 +13,51 @@ import (
 	"travel-booking-portal/gen/models"
 )
 
+// UpdateUserOKCode is the HTTP code returned for type UpdateUserOK
+const UpdateUserOKCode int = 200
+
+/*
+UpdateUserOK User updated successfully
+
+swagger:response updateUserOK
+*/
+type UpdateUserOK struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.User `json:"body,omitempty"`
+}
+
+// NewUpdateUserOK creates UpdateUserOK with default headers values
+func NewUpdateUserOK() *UpdateUserOK {
+
+	return &UpdateUserOK{}
+}
+
+// WithPayload adds the payload to the update user o k response
+func (o *UpdateUserOK) WithPayload(payload *models.User) *UpdateUserOK {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the update user o k response
+func (o *UpdateUserOK) SetPayload(payload *models.User) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *UpdateUserOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(200)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // UpdateUserCreatedCode is the HTTP code returned for type UpdateUserCreated
 const UpdateUserCreatedCode int = 201
 
@@ -56,6 +101,31 @@ func (o *UpdateUserCreated) WriteResponse(rw http.ResponseWriter, producer runti
 			panic(err) // let the recovery middleware deal with this
 		}
 	}
+}
+
+// UpdateUserBadRequestCode is the HTTP code returned for type UpdateUserBadRequest
+const UpdateUserBadRequestCode int = 400
+
+/*
+UpdateUserBadRequest Bad Request - The request is invalid or contains errors
+
+swagger:response updateUserBadRequest
+*/
+type UpdateUserBadRequest struct {
+}
+
+// NewUpdateUserBadRequest creates UpdateUserBadRequest with default headers values
+func NewUpdateUserBadRequest() *UpdateUserBadRequest {
+
+	return &UpdateUserBadRequest{}
+}
+
+// WriteResponse to the client
+func (o *UpdateUserBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(400)
 }
 
 // UpdateUserNotFoundCode is the HTTP code returned for type UpdateUserNotFound

@@ -6,6 +6,7 @@ import (
 	loads "github.com/go-openapi/loads"
 	"github.com/spf13/viper"
 
+	runtime "travel-booking-portal"
 	"travel-booking-portal/config"
 	"travel-booking-portal/gen/restapi"
 	"travel-booking-portal/handlers"

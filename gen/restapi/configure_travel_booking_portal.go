@@ -93,29 +93,9 @@ func configureAPI(api *operations.TravelBookingPortalAPI) http.Handler {
 			return middleware.NotImplemented("operation operations.GetBooking has not yet been implemented")
 		})
 	}
-	if api.GetBookingsHandler == nil {
-		api.GetBookingsHandler = operations.GetBookingsHandlerFunc(func(params operations.GetBookingsParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.GetBookings has not yet been implemented")
-		})
-	}
-	if api.BookingsGetBookingsByDateTimeHandler == nil {
-		api.BookingsGetBookingsByDateTimeHandler = bookings.GetBookingsByDateTimeHandlerFunc(func(params bookings.GetBookingsByDateTimeParams) middleware.Responder {
-			return middleware.NotImplemented("operation bookings.GetBookingsByDateTime has not yet been implemented")
-		})
-	}
 	if api.GetCarHandler == nil {
 		api.GetCarHandler = operations.GetCarHandlerFunc(func(params operations.GetCarParams) middleware.Responder {
 			return middleware.NotImplemented("operation operations.GetCar has not yet been implemented")
-		})
-	}
-	if api.GetCarsHandler == nil {
-		api.GetCarsHandler = operations.GetCarsHandlerFunc(func(params operations.GetCarsParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.GetCars has not yet been implemented")
-		})
-	}
-	if api.BookingsGetConfirmedBookingsHandler == nil {
-		api.BookingsGetConfirmedBookingsHandler = bookings.GetConfirmedBookingsHandlerFunc(func(params bookings.GetConfirmedBookingsParams) middleware.Responder {
-			return middleware.NotImplemented("operation bookings.GetConfirmedBookings has not yet been implemented")
 		})
 	}
 	if api.GetHotelHandler == nil {
@@ -123,19 +103,9 @@ func configureAPI(api *operations.TravelBookingPortalAPI) http.Handler {
 			return middleware.NotImplemented("operation operations.GetHotel has not yet been implemented")
 		})
 	}
-	if api.GetHotelsHandler == nil {
-		api.GetHotelsHandler = operations.GetHotelsHandlerFunc(func(params operations.GetHotelsParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.GetHotels has not yet been implemented")
-		})
-	}
 	if api.GetRoomHandler == nil {
 		api.GetRoomHandler = operations.GetRoomHandlerFunc(func(params operations.GetRoomParams) middleware.Responder {
 			return middleware.NotImplemented("operation operations.GetRoom has not yet been implemented")
-		})
-	}
-	if api.GetRoomsHandler == nil {
-		api.GetRoomsHandler = operations.GetRoomsHandlerFunc(func(params operations.GetRoomsParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.GetRooms has not yet been implemented")
 		})
 	}
 	if api.GetUserHandler == nil {
@@ -143,9 +113,39 @@ func configureAPI(api *operations.TravelBookingPortalAPI) http.Handler {
 			return middleware.NotImplemented("operation operations.GetUser has not yet been implemented")
 		})
 	}
-	if api.GetUsersHandler == nil {
-		api.GetUsersHandler = operations.GetUsersHandlerFunc(func(params operations.GetUsersParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.GetUsers has not yet been implemented")
+	if api.ListBookingsHandler == nil {
+		api.ListBookingsHandler = operations.ListBookingsHandlerFunc(func(params operations.ListBookingsParams) middleware.Responder {
+			return middleware.NotImplemented("operation operations.ListBookings has not yet been implemented")
+		})
+	}
+	if api.BookingsListBookingsByDateTimeHandler == nil {
+		api.BookingsListBookingsByDateTimeHandler = bookings.ListBookingsByDateTimeHandlerFunc(func(params bookings.ListBookingsByDateTimeParams) middleware.Responder {
+			return middleware.NotImplemented("operation bookings.ListBookingsByDateTime has not yet been implemented")
+		})
+	}
+	if api.ListCarsHandler == nil {
+		api.ListCarsHandler = operations.ListCarsHandlerFunc(func(params operations.ListCarsParams) middleware.Responder {
+			return middleware.NotImplemented("operation operations.ListCars has not yet been implemented")
+		})
+	}
+	if api.BookingsListConfirmedBookingsHandler == nil {
+		api.BookingsListConfirmedBookingsHandler = bookings.ListConfirmedBookingsHandlerFunc(func(params bookings.ListConfirmedBookingsParams) middleware.Responder {
+			return middleware.NotImplemented("operation bookings.ListConfirmedBookings has not yet been implemented")
+		})
+	}
+	if api.ListHotelsHandler == nil {
+		api.ListHotelsHandler = operations.ListHotelsHandlerFunc(func(params operations.ListHotelsParams) middleware.Responder {
+			return middleware.NotImplemented("operation operations.ListHotels has not yet been implemented")
+		})
+	}
+	if api.ListRoomsHandler == nil {
+		api.ListRoomsHandler = operations.ListRoomsHandlerFunc(func(params operations.ListRoomsParams) middleware.Responder {
+			return middleware.NotImplemented("operation operations.ListRooms has not yet been implemented")
+		})
+	}
+	if api.ListUsersHandler == nil {
+		api.ListUsersHandler = operations.ListUsersHandlerFunc(func(params operations.ListUsersParams) middleware.Responder {
+			return middleware.NotImplemented("operation operations.ListUsers has not yet been implemented")
 		})
 	}
 	if api.UpdateBookingHandler == nil {

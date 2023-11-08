@@ -58,6 +58,31 @@ func (o *CreateHotelCreated) WriteResponse(rw http.ResponseWriter, producer runt
 	}
 }
 
+// CreateHotelBadRequestCode is the HTTP code returned for type CreateHotelBadRequest
+const CreateHotelBadRequestCode int = 400
+
+/*
+CreateHotelBadRequest Bad Request - The request is invalid or contains errors
+
+swagger:response createHotelBadRequest
+*/
+type CreateHotelBadRequest struct {
+}
+
+// NewCreateHotelBadRequest creates CreateHotelBadRequest with default headers values
+func NewCreateHotelBadRequest() *CreateHotelBadRequest {
+
+	return &CreateHotelBadRequest{}
+}
+
+// WriteResponse to the client
+func (o *CreateHotelBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(400)
+}
+
 // CreateHotelConflictCode is the HTTP code returned for type CreateHotelConflict
 const CreateHotelConflictCode int = 409
 

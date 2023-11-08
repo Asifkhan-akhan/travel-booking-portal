@@ -58,6 +58,31 @@ func (o *CreateCarCreated) WriteResponse(rw http.ResponseWriter, producer runtim
 	}
 }
 
+// CreateCarBadRequestCode is the HTTP code returned for type CreateCarBadRequest
+const CreateCarBadRequestCode int = 400
+
+/*
+CreateCarBadRequest Bad Request - The request is invalid or contains errors
+
+swagger:response createCarBadRequest
+*/
+type CreateCarBadRequest struct {
+}
+
+// NewCreateCarBadRequest creates CreateCarBadRequest with default headers values
+func NewCreateCarBadRequest() *CreateCarBadRequest {
+
+	return &CreateCarBadRequest{}
+}
+
+// WriteResponse to the client
+func (o *CreateCarBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(400)
+}
+
 // CreateCarConflictCode is the HTTP code returned for type CreateCarConflict
 const CreateCarConflictCode int = 409
 

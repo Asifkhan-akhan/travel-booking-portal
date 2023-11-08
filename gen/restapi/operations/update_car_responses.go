@@ -13,6 +13,51 @@ import (
 	"travel-booking-portal/gen/models"
 )
 
+// UpdateCarOKCode is the HTTP code returned for type UpdateCarOK
+const UpdateCarOKCode int = 200
+
+/*
+UpdateCarOK  updated successfully
+
+swagger:response updateCarOK
+*/
+type UpdateCarOK struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.CarRental `json:"body,omitempty"`
+}
+
+// NewUpdateCarOK creates UpdateCarOK with default headers values
+func NewUpdateCarOK() *UpdateCarOK {
+
+	return &UpdateCarOK{}
+}
+
+// WithPayload adds the payload to the update car o k response
+func (o *UpdateCarOK) WithPayload(payload *models.CarRental) *UpdateCarOK {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the update car o k response
+func (o *UpdateCarOK) SetPayload(payload *models.CarRental) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *UpdateCarOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(200)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // UpdateCarCreatedCode is the HTTP code returned for type UpdateCarCreated
 const UpdateCarCreatedCode int = 201
 
@@ -56,6 +101,31 @@ func (o *UpdateCarCreated) WriteResponse(rw http.ResponseWriter, producer runtim
 			panic(err) // let the recovery middleware deal with this
 		}
 	}
+}
+
+// UpdateCarBadRequestCode is the HTTP code returned for type UpdateCarBadRequest
+const UpdateCarBadRequestCode int = 400
+
+/*
+UpdateCarBadRequest Bad Request - The request is invalid or contains errors
+
+swagger:response updateCarBadRequest
+*/
+type UpdateCarBadRequest struct {
+}
+
+// NewUpdateCarBadRequest creates UpdateCarBadRequest with default headers values
+func NewUpdateCarBadRequest() *UpdateCarBadRequest {
+
+	return &UpdateCarBadRequest{}
+}
+
+// WriteResponse to the client
+func (o *UpdateCarBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(400)
 }
 
 // UpdateCarNotFoundCode is the HTTP code returned for type UpdateCarNotFound

@@ -13,6 +13,51 @@ import (
 	"travel-booking-portal/gen/models"
 )
 
+// UpdateRoomOKCode is the HTTP code returned for type UpdateRoomOK
+const UpdateRoomOKCode int = 200
+
+/*
+UpdateRoomOK Room updated successfully
+
+swagger:response updateRoomOK
+*/
+type UpdateRoomOK struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Room `json:"body,omitempty"`
+}
+
+// NewUpdateRoomOK creates UpdateRoomOK with default headers values
+func NewUpdateRoomOK() *UpdateRoomOK {
+
+	return &UpdateRoomOK{}
+}
+
+// WithPayload adds the payload to the update room o k response
+func (o *UpdateRoomOK) WithPayload(payload *models.Room) *UpdateRoomOK {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the update room o k response
+func (o *UpdateRoomOK) SetPayload(payload *models.Room) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *UpdateRoomOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(200)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // UpdateRoomCreatedCode is the HTTP code returned for type UpdateRoomCreated
 const UpdateRoomCreatedCode int = 201
 
@@ -56,6 +101,31 @@ func (o *UpdateRoomCreated) WriteResponse(rw http.ResponseWriter, producer runti
 			panic(err) // let the recovery middleware deal with this
 		}
 	}
+}
+
+// UpdateRoomBadRequestCode is the HTTP code returned for type UpdateRoomBadRequest
+const UpdateRoomBadRequestCode int = 400
+
+/*
+UpdateRoomBadRequest Bad Request - The request is invalid or contains errors
+
+swagger:response updateRoomBadRequest
+*/
+type UpdateRoomBadRequest struct {
+}
+
+// NewUpdateRoomBadRequest creates UpdateRoomBadRequest with default headers values
+func NewUpdateRoomBadRequest() *UpdateRoomBadRequest {
+
+	return &UpdateRoomBadRequest{}
+}
+
+// WriteResponse to the client
+func (o *UpdateRoomBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(400)
 }
 
 // UpdateRoomNotFoundCode is the HTTP code returned for type UpdateRoomNotFound

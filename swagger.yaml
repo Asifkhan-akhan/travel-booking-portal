@@ -28,6 +28,8 @@ paths:
           description: "User added successfully"
           schema:
             $ref: "#/definitions/User"
+        400:
+          description: "Bad Request - The request is invalid or contains errors"
         409:
           description: "User already exists"
         500:
@@ -46,12 +48,19 @@ paths:
           description: "User updated successfully"
           schema:
             $ref: "#/definitions/User"
+        200:
+          description: "User updated successfully"
+          schema:
+            $ref: "#/definitions/User"
+
+        400:
+          description: "Bad Request - The request is invalid or contains errors"
         404:
           description: "User already exists"
         500:
           description: "Internal Server Error"
     get:
-      operationId: "GetUsers"
+      operationId: "ListUsers"
       responses:
         200:
           description: "List of Users retrieved successfully"
@@ -112,6 +121,12 @@ paths:
           description: "Booking added successfully"
           schema:
             $ref: "#/definitions/Booking"
+
+        400:
+          description: "Bad Request - The request is invalid or contains errors"
+        409:
+          description: "Booking already exists"
+
         409:
           description: "Booking already exists"
         500:
@@ -126,16 +141,25 @@ paths:
           schema:
             $ref: "#/definitions/Booking"
       responses:
+        200:
+          description: " updated successfully"
+          schema:
+            $ref: "#/definitions/Booking"
         201:
           description: "Booking updated successfully"
           schema:
             $ref: "#/definitions/Booking"
+        400:
+          description: "Bad Request - The request is invalid or contains errors"
+        409:
+          description: "Booking already exists"
+
         404:
           description: "Booking not found"
         500:
           description: "Internal Server Error"
     get:
-      operationId: "GetBookings"
+      operationId: "ListBookings"
       responses:
         200:
           description: "List of bookings retrieved successfully"
@@ -143,6 +167,8 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Booking"
+        404:
+          description: "Booking not found"
 
         500:
           description: "Internal Server Error"
@@ -173,6 +199,8 @@ paths:
           required: true
           type: "integer"
       responses:
+        400:
+          description: "Bad Request - The request is invalid or contains errors"
         204:
           description: "Booking deleted successfully"
         404:
@@ -197,6 +225,8 @@ paths:
             $ref: "#/definitions/CarRental"
         409:
           description: "CarRental already exists"
+        400:
+          description: "Bad Request - The request is invalid or contains errors"
         500:
           description: "Internal Server Error"
     put:
@@ -209,16 +239,22 @@ paths:
           schema:
             $ref: "#/definitions/CarRental"
       responses:
+        200:
+          description: " updated successfully"
+          schema:
+            $ref: "#/definitions/CarRental"
         201:
           description: "CarRental updated successfully"
           schema:
             $ref: "#/definitions/CarRental"
         404:
           description: "CarRental not found"
+        400:
+          description: "Bad Request - The request is invalid or contains errors"
         500:
           description: "Internal Server Error"
     get:
-      operationId: "GetCars"
+      operationId: "ListCars"
       responses:
         200:
           description: "List of Cars retrieved successfully"
@@ -279,6 +315,8 @@ paths:
           description: "Hotel added successfully"
           schema:
             $ref: "#/definitions/Hotel"
+        400:
+          description: "Bad Request - The request is invalid or contains errors"
         409:
           description: "Hotel already exists"
         500:
@@ -293,16 +331,22 @@ paths:
           schema:
             $ref: "#/definitions/Hotel"
       responses:
+        200:
+          description: " updated successfully"
+          schema:
+            $ref: "#/definitions/Hotel"
         201:
           description: "Hotel updated successfully"
           schema:
             $ref: "#/definitions/Hotel"
+        400:
+          description: "Bad Request - The request is invalid or contains errors"
         404:
           description: "Hotel not found"
         500:
           description: "Internal Server Error"
     get:
-      operationId: "GetHotels"
+      operationId: "ListHotels"
       responses:
         200:
           description: "List of Hotels retrieved successfully"
@@ -362,6 +406,8 @@ paths:
           description: "Room added successfully"
           schema:
             $ref: "#/definitions/Room"
+        400:
+          description: "Bad Request - The request is invalid or contains errors"
         409:
           description: "Room already exists"
         500:
@@ -376,16 +422,22 @@ paths:
           schema:
             $ref: "#/definitions/Room"
       responses:
+        200:
+          description: "Room updated successfully"
+          schema:
+            $ref: "#/definitions/Room"
         201:
           description: "Room updated successfully"
           schema:
             $ref: "#/definitions/Room"
+        400:
+          description: "Bad Request - The request is invalid or contains errors"
         404:
           description: "Room not found"
         500:
           description: "Internal Server Error"
     get:
-      operationId: "GetRooms"
+      operationId: "ListRooms"
       responses:
         200:
           description: "List of Rooms retrieved successfully"
@@ -431,23 +483,23 @@ paths:
         500:
           description: "Internal Server Error"
 
-  /bookings/datetime:
+  /bookings/{userID}/{dateTime}:
     get:
       tags:
         - bookings
-      operationId: "GetBookingsByDateTime"
+      operationId: "ListBookingsByDateTime"
       summary: "Retrieve bookings for a user based on a datetime"
       parameters:
         - name: "userID"
-          in: "query"
+          in: "path"
           description: "User ID for filtering bookings"
           required: true
           type: "integer"
         - name: "dateTime"
-          in: "query"
+          in: "path"
           description: "Date and time for filtering bookings"
           required: true
-          type: "string"  # You may want to specify a valid format for the datetime input (e.g., "date-time").
+          type: "string"
       responses:
         200:
           description: "List of bookings retrieved successfully"
@@ -455,20 +507,23 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Booking"
+        404:
+          description: "Bookings not found"
         400:
           description: "Bad Request - Invalid input parameters"
         500:
           description: "Internal Server Error"
 
-  /bookings/confirmed:
+
+  /bookings/confirmed/{userID}:
     get:
       tags:
         - bookings
-      operationId: "GetConfirmedBookings"
+      operationId: "ListConfirmedBookings"
       summary: "Retrieve confirmed bookings for a user"
       parameters:
         - name: "userID"
-          in: "query"
+          in: "path"
           description: "User ID for filtering confirmed bookings"
           required: true
           type: "integer"
@@ -479,6 +534,8 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Booking"
+        404:
+          description: "Bookings not found"
         400:
           description: "Bad Request - Invalid input parameters"
         500:

@@ -58,11 +58,17 @@ func (c *client) CreateOrUpdateBooking(booking *models.Booking) (int, error) {
 
 		return 0, errors.New("Invalid service type passed")
 	}
-
 	overlappingFilter := bson.D{
-		{Key: "service_id", Value: booking.ServiceID},
-		{Key: "from_date", Value: bson.D{{Key: "$lt", Value: booking.ToDate}}},
-		{Key: "to_date", Value: bson.D{{Key: "$gt", Value: booking.FromDate}}}}
+		{
+			Key: "$and",
+			Value: bson.A{
+				bson.D{{Key: "service_id", Value: booking.ServiceID}},
+				bson.D{{Key: "from_date", Value: bson.D{{Key: "$lt", Value: booking.ToDate}}}},
+				bson.D{{Key: "to_date", Value: bson.D{{Key: "$gt", Value: booking.FromDate}}}},
+			},
+		},
+	}
+
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(bokCollection)
 	filter := bson.D{{Key: "_id", Value: booking.ID}}
 	update := bson.D{{Key: "$set", Value: booking}}
@@ -76,8 +82,10 @@ func (c *client) CreateOrUpdateBooking(booking *models.Booking) (int, error) {
 
 			return 0, errors.Wrap(err, "failed to create booking")
 		}
-	} else {
+		return booking.ID, nil
 
+	} else {
+		//update
 		if result.Err() == nil {
 			var dbbooking models.Booking
 
@@ -90,10 +98,12 @@ func (c *client) CreateOrUpdateBooking(booking *models.Booking) (int, error) {
 
 				return 0, errors.Wrap(err, "failed to update booking")
 			}
+			return booking.ID, nil
+
 		}
 	}
 
-	return booking.ID, nil
+	return 0, nil
 }
 
 func (c *client) CreateOrUpdateCarRental(car *models.CarRental) (int, error) {
@@ -276,9 +286,10 @@ func (c *client) ListBooking(searchCriteria map[string]interface{}) ([]*models.B
 	var bookings []*models.Booking
 	var cursor *mongo.Cursor
 	var err error
+
 	// Create a filter based on the search parameters
 	filter := bson.M{}
-	// Check if specific search parameters are provided and construct the filter accordingly
+
 	if searchCriteria != nil {
 		for key, value := range searchCriteria {
 			filter[key] = value
@@ -286,9 +297,11 @@ func (c *client) ListBooking(searchCriteria map[string]interface{}) ([]*models.B
 	}
 
 	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{"_id", 1}}))
+
 	if err != nil {
 		return nil, err
 	}
+
 	if err := cursor.All(context.TODO(), &bookings); err != nil {
 		return nil, err
 	}
@@ -304,6 +317,7 @@ func (c *client) ListCarRental(searchCriteria map[string]interface{}) ([]*models
 	var err error
 
 	filter := bson.M{}
+
 	// Populate the filter based on the provided search criteria.
 	if searchCriteria != nil {
 		for key, value := range searchCriteria {
@@ -315,8 +329,8 @@ func (c *client) ListCarRental(searchCriteria map[string]interface{}) ([]*models
 	if err != nil {
 		return nil, err
 	}
+
 	if err := cursor.All(context.TODO(), &cars); err != nil {
-		fmt.Print("there is an error\n", err)
 		return nil, err
 	}
 
@@ -339,9 +353,11 @@ func (c *client) ListHotel(searchCriteria map[string]interface{}) ([]*models.Hot
 	}
 
 	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{"_id", 1}}))
+
 	if err != nil {
 		return nil, err
 	}
+
 	if err := cursor.All(context.TODO(), &hotels); err != nil {
 		return nil, err
 	}
@@ -357,6 +373,7 @@ func (c *client) ListRoom(searchCriteria map[string]interface{}) ([]*models.Room
 	var err error
 
 	filter := bson.M{}
+
 	if searchCriteria != nil {
 		for key, value := range searchCriteria {
 			filter[key] = value
@@ -366,6 +383,7 @@ func (c *client) ListRoom(searchCriteria map[string]interface{}) ([]*models.Room
 	if err != nil {
 		return nil, err
 	}
+
 	if err := cursor.All(context.TODO(), &rooms); err != nil {
 		return nil, err
 	}
@@ -381,6 +399,7 @@ func (c *client) ListUser(searchCriteria map[string]interface{}) ([]*models.User
 	var err error
 
 	filter := bson.M{}
+
 	if searchCriteria != nil {
 		for key, value := range searchCriteria {
 			filter[key] = value
@@ -391,6 +410,7 @@ func (c *client) ListUser(searchCriteria map[string]interface{}) ([]*models.User
 	if err != nil {
 		return nil, err
 	}
+
 	if err := cursor.All(context.TODO(), &users); err != nil {
 		return nil, err
 	}

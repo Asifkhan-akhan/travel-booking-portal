@@ -13,6 +13,51 @@ import (
 	"travel-booking-portal/gen/models"
 )
 
+// UpdateBookingOKCode is the HTTP code returned for type UpdateBookingOK
+const UpdateBookingOKCode int = 200
+
+/*
+UpdateBookingOK  updated successfully
+
+swagger:response updateBookingOK
+*/
+type UpdateBookingOK struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Booking `json:"body,omitempty"`
+}
+
+// NewUpdateBookingOK creates UpdateBookingOK with default headers values
+func NewUpdateBookingOK() *UpdateBookingOK {
+
+	return &UpdateBookingOK{}
+}
+
+// WithPayload adds the payload to the update booking o k response
+func (o *UpdateBookingOK) WithPayload(payload *models.Booking) *UpdateBookingOK {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the update booking o k response
+func (o *UpdateBookingOK) SetPayload(payload *models.Booking) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *UpdateBookingOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(200)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // UpdateBookingCreatedCode is the HTTP code returned for type UpdateBookingCreated
 const UpdateBookingCreatedCode int = 201
 
@@ -58,6 +103,31 @@ func (o *UpdateBookingCreated) WriteResponse(rw http.ResponseWriter, producer ru
 	}
 }
 
+// UpdateBookingBadRequestCode is the HTTP code returned for type UpdateBookingBadRequest
+const UpdateBookingBadRequestCode int = 400
+
+/*
+UpdateBookingBadRequest Bad Request - The request is invalid or contains errors
+
+swagger:response updateBookingBadRequest
+*/
+type UpdateBookingBadRequest struct {
+}
+
+// NewUpdateBookingBadRequest creates UpdateBookingBadRequest with default headers values
+func NewUpdateBookingBadRequest() *UpdateBookingBadRequest {
+
+	return &UpdateBookingBadRequest{}
+}
+
+// WriteResponse to the client
+func (o *UpdateBookingBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(400)
+}
+
 // UpdateBookingNotFoundCode is the HTTP code returned for type UpdateBookingNotFound
 const UpdateBookingNotFoundCode int = 404
 
@@ -81,6 +151,31 @@ func (o *UpdateBookingNotFound) WriteResponse(rw http.ResponseWriter, producer r
 	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
 
 	rw.WriteHeader(404)
+}
+
+// UpdateBookingConflictCode is the HTTP code returned for type UpdateBookingConflict
+const UpdateBookingConflictCode int = 409
+
+/*
+UpdateBookingConflict Booking already exists
+
+swagger:response updateBookingConflict
+*/
+type UpdateBookingConflict struct {
+}
+
+// NewUpdateBookingConflict creates UpdateBookingConflict with default headers values
+func NewUpdateBookingConflict() *UpdateBookingConflict {
+
+	return &UpdateBookingConflict{}
+}
+
+// WriteResponse to the client
+func (o *UpdateBookingConflict) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(409)
 }
 
 // UpdateBookingInternalServerErrorCode is the HTTP code returned for type UpdateBookingInternalServerError

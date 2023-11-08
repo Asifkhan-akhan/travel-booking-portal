@@ -58,6 +58,31 @@ func (o *CreateRoomCreated) WriteResponse(rw http.ResponseWriter, producer runti
 	}
 }
 
+// CreateRoomBadRequestCode is the HTTP code returned for type CreateRoomBadRequest
+const CreateRoomBadRequestCode int = 400
+
+/*
+CreateRoomBadRequest Bad Request - The request is invalid or contains errors
+
+swagger:response createRoomBadRequest
+*/
+type CreateRoomBadRequest struct {
+}
+
+// NewCreateRoomBadRequest creates CreateRoomBadRequest with default headers values
+func NewCreateRoomBadRequest() *CreateRoomBadRequest {
+
+	return &CreateRoomBadRequest{}
+}
+
+// WriteResponse to the client
+func (o *CreateRoomBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(400)
+}
+
 // CreateRoomConflictCode is the HTTP code returned for type CreateRoomConflict
 const CreateRoomConflictCode int = 409
 
