@@ -41,7 +41,7 @@ func init() {
 	viper.SetDefault(DbPort, "27017")
 	// Set default values for email and SMTP settings here
 	viper.SetDefault(EmailSMTPUsername, "sayednur171@gmail.com")
-	viper.SetDefault(EmailSMTPPassword, "xjh dfkjh adfh akd ")
+	viper.SetDefault(EmailSMTPPassword, "xjh jjlk adfh akd ")
 	viper.SetDefault(EmailSMTPHost, "smtp.gmail.com")
 	viper.SetDefault(EmailSMTPPort, "587")
 	viper.SetDefault(EmailFromAddress, "sayednur171@gmail.com")
