@@ -30,10 +30,6 @@ type ClientOption func(*runtime.ClientOperation)
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	AllBookings(params *AllBookingsParams, opts ...ClientOption) (*AllBookingsOK, error)
-
-	ConfirmedBooking(params *ConfirmedBookingParams, opts ...ClientOption) (*ConfirmedBookingOK, error)
-
 	CreateBooking(params *CreateBookingParams, opts ...ClientOption) (*CreateBookingCreated, error)
 
 	CreateCar(params *CreateCarParams, opts ...ClientOption) (*CreateCarCreated, error)
@@ -70,13 +66,9 @@ type ClientService interface {
 
 	GetRooms(params *GetRoomsParams, opts ...ClientOption) (*GetRoomsOK, error)
 
-	GetServiceBookings(params *GetServiceBookingsParams, opts ...ClientOption) (*GetServiceBookingsOK, error)
-
 	GetUser(params *GetUserParams, opts ...ClientOption) (*GetUserOK, error)
 
 	GetUsers(params *GetUsersParams, opts ...ClientOption) (*GetUsersOK, error)
-
-	SearchBooking(params *SearchBookingParams, opts ...ClientOption) (*SearchBookingOK, error)
 
 	UpdateBooking(params *UpdateBookingParams, opts ...ClientOption) (*UpdateBookingCreated, error)
 
@@ -88,85 +80,7 @@ type ClientService interface {
 
 	UpdateUser(params *UpdateUserParams, opts ...ClientOption) (*UpdateUserCreated, error)
 
-	GetRoomsOfHotel(params *GetRoomsOfHotelParams, opts ...ClientOption) (*GetRoomsOfHotelOK, error)
-
 	SetTransport(transport runtime.ClientTransport)
-}
-
-/*
-AllBookings all bookings API
-*/
-func (a *Client) AllBookings(params *AllBookingsParams, opts ...ClientOption) (*AllBookingsOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewAllBookingsParams()
-	}
-	op := &runtime.ClientOperation{
-		ID:                 "AllBookings",
-		Method:             "GET",
-		PathPattern:        "/booking/user/{userID}",
-		ProducesMediaTypes: []string{"application/json"},
-		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
-		Params:             params,
-		Reader:             &AllBookingsReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*AllBookingsOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for AllBookings: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-ConfirmedBooking confirmed booking API
-*/
-func (a *Client) ConfirmedBooking(params *ConfirmedBookingParams, opts ...ClientOption) (*ConfirmedBookingOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewConfirmedBookingParams()
-	}
-	op := &runtime.ClientOperation{
-		ID:                 "ConfirmedBooking",
-		Method:             "GET",
-		PathPattern:        "/booking/confirmed",
-		ProducesMediaTypes: []string{"application/json"},
-		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
-		Params:             params,
-		Reader:             &ConfirmedBookingReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*ConfirmedBookingOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for ConfirmedBooking: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
 }
 
 /*
@@ -854,44 +768,6 @@ func (a *Client) GetRooms(params *GetRoomsParams, opts ...ClientOption) (*GetRoo
 }
 
 /*
-GetServiceBookings get service bookings API
-*/
-func (a *Client) GetServiceBookings(params *GetServiceBookingsParams, opts ...ClientOption) (*GetServiceBookingsOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewGetServiceBookingsParams()
-	}
-	op := &runtime.ClientOperation{
-		ID:                 "GetServiceBookings",
-		Method:             "GET",
-		PathPattern:        "/service/{ServiceID}/booking",
-		ProducesMediaTypes: []string{"application/json"},
-		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
-		Params:             params,
-		Reader:             &GetServiceBookingsReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*GetServiceBookingsOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for GetServiceBookings: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
 GetUser get user API
 */
 func (a *Client) GetUser(params *GetUserParams, opts ...ClientOption) (*GetUserOK, error) {
@@ -964,44 +840,6 @@ func (a *Client) GetUsers(params *GetUsersParams, opts ...ClientOption) (*GetUse
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for GetUsers: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-SearchBooking search booking API
-*/
-func (a *Client) SearchBooking(params *SearchBookingParams, opts ...ClientOption) (*SearchBookingOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewSearchBookingParams()
-	}
-	op := &runtime.ClientOperation{
-		ID:                 "SearchBooking",
-		Method:             "GET",
-		PathPattern:        "/booking/search",
-		ProducesMediaTypes: []string{"application/json"},
-		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
-		Params:             params,
-		Reader:             &SearchBookingReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*SearchBookingOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for SearchBooking: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -1192,44 +1030,6 @@ func (a *Client) UpdateUser(params *UpdateUserParams, opts ...ClientOption) (*Up
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for UpdateUser: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-GetRoomsOfHotel get rooms of hotel API
-*/
-func (a *Client) GetRoomsOfHotel(params *GetRoomsOfHotelParams, opts ...ClientOption) (*GetRoomsOfHotelOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewGetRoomsOfHotelParams()
-	}
-	op := &runtime.ClientOperation{
-		ID:                 "getRoomsOfHotel",
-		Method:             "GET",
-		PathPattern:        "/hotel/{ID}/rooms",
-		ProducesMediaTypes: []string{"application/json"},
-		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
-		Params:             params,
-		Reader:             &GetRoomsOfHotelReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-
-	result, err := a.transport.Submit(op)
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*GetRoomsOfHotelOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for getRoomsOfHotel: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

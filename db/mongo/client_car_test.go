@@ -89,7 +89,7 @@ func Test_client_DeleteCarRental(t *testing.T) {
 		})
 	}
 }
-func Test_client_GetCarRentals(t *testing.T) {
+func Test_client_ListCarRentals(t *testing.T) {
 	os.Setenv("DB_PORT", "27017")
 	os.Setenv("DB_HOST", "localhost")
 	c, _ := NewClient()
@@ -108,35 +108,31 @@ func Test_client_GetCarRentals(t *testing.T) {
 		t.Logf("Car rental created with ID: %d", createdCarRentalID)
 	}
 
-	type args struct {
-		id int
-	}
-
 	tests := []struct {
-		name    string
-		args    args
-		want    []*models.CarRental
-		wantErr bool
+		name           string
+		searchCriteria map[string]interface{}
+		want           []*models.CarRental
+		wantErr        bool
 	}{
 		{
-			name:    "success - all car rentals get",
-			args:    args{id: 0},
-			want:    []*models.CarRental{carRental}, // You can modify this as needed
-			wantErr: false,
+			name:           "success - all car rentals get",
+			searchCriteria: map[string]interface{}{},       // No search criteria
+			want:           []*models.CarRental{carRental}, // You can modify this as needed
+			wantErr:        false,
 		},
 		{
-			name:    "success - getting a single car rental",
-			args:    args{id: createdCarRentalID},
-			want:    []*models.CarRental{carRental}, // You can modify this as needed
-			wantErr: false,
+			name:           "success - getting a single car rental",
+			searchCriteria: map[string]interface{}{"id": createdCarRentalID}, // Search by ID
+			want:           []*models.CarRental{carRental},                   // You can modify this as needed
+			wantErr:        false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			carRentals, err := c.GetCarRental(tt.args.id)
+			carRentals, err := c.ListCarRental(tt.searchCriteria)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetCarRentals() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ListCarRentals() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			t.Logf("Got %v", carRentals)

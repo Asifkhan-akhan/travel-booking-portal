@@ -18,6 +18,8 @@ import (
 	"github.com/go-openapi/spec"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+
+	"travel-booking-portal/gen/restapi/operations/bookings"
 )
 
 // NewTravelBookingPortalAPI creates a new TravelBookingPortal instance
@@ -42,12 +44,6 @@ func NewTravelBookingPortalAPI(spec *loads.Document) *TravelBookingPortalAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
-		AllBookingsHandler: AllBookingsHandlerFunc(func(params AllBookingsParams) middleware.Responder {
-			return middleware.NotImplemented("operation AllBookings has not yet been implemented")
-		}),
-		ConfirmedBookingHandler: ConfirmedBookingHandlerFunc(func(params ConfirmedBookingParams) middleware.Responder {
-			return middleware.NotImplemented("operation ConfirmedBooking has not yet been implemented")
-		}),
 		CreateBookingHandler: CreateBookingHandlerFunc(func(params CreateBookingParams) middleware.Responder {
 			return middleware.NotImplemented("operation CreateBooking has not yet been implemented")
 		}),
@@ -84,11 +80,17 @@ func NewTravelBookingPortalAPI(spec *loads.Document) *TravelBookingPortalAPI {
 		GetBookingsHandler: GetBookingsHandlerFunc(func(params GetBookingsParams) middleware.Responder {
 			return middleware.NotImplemented("operation GetBookings has not yet been implemented")
 		}),
+		BookingsGetBookingsByDateTimeHandler: bookings.GetBookingsByDateTimeHandlerFunc(func(params bookings.GetBookingsByDateTimeParams) middleware.Responder {
+			return middleware.NotImplemented("operation bookings.GetBookingsByDateTime has not yet been implemented")
+		}),
 		GetCarHandler: GetCarHandlerFunc(func(params GetCarParams) middleware.Responder {
 			return middleware.NotImplemented("operation GetCar has not yet been implemented")
 		}),
 		GetCarsHandler: GetCarsHandlerFunc(func(params GetCarsParams) middleware.Responder {
 			return middleware.NotImplemented("operation GetCars has not yet been implemented")
+		}),
+		BookingsGetConfirmedBookingsHandler: bookings.GetConfirmedBookingsHandlerFunc(func(params bookings.GetConfirmedBookingsParams) middleware.Responder {
+			return middleware.NotImplemented("operation bookings.GetConfirmedBookings has not yet been implemented")
 		}),
 		GetHotelHandler: GetHotelHandlerFunc(func(params GetHotelParams) middleware.Responder {
 			return middleware.NotImplemented("operation GetHotel has not yet been implemented")
@@ -102,17 +104,11 @@ func NewTravelBookingPortalAPI(spec *loads.Document) *TravelBookingPortalAPI {
 		GetRoomsHandler: GetRoomsHandlerFunc(func(params GetRoomsParams) middleware.Responder {
 			return middleware.NotImplemented("operation GetRooms has not yet been implemented")
 		}),
-		GetServiceBookingsHandler: GetServiceBookingsHandlerFunc(func(params GetServiceBookingsParams) middleware.Responder {
-			return middleware.NotImplemented("operation GetServiceBookings has not yet been implemented")
-		}),
 		GetUserHandler: GetUserHandlerFunc(func(params GetUserParams) middleware.Responder {
 			return middleware.NotImplemented("operation GetUser has not yet been implemented")
 		}),
 		GetUsersHandler: GetUsersHandlerFunc(func(params GetUsersParams) middleware.Responder {
 			return middleware.NotImplemented("operation GetUsers has not yet been implemented")
-		}),
-		SearchBookingHandler: SearchBookingHandlerFunc(func(params SearchBookingParams) middleware.Responder {
-			return middleware.NotImplemented("operation SearchBooking has not yet been implemented")
 		}),
 		UpdateBookingHandler: UpdateBookingHandlerFunc(func(params UpdateBookingParams) middleware.Responder {
 			return middleware.NotImplemented("operation UpdateBooking has not yet been implemented")
@@ -128,9 +124,6 @@ func NewTravelBookingPortalAPI(spec *loads.Document) *TravelBookingPortalAPI {
 		}),
 		UpdateUserHandler: UpdateUserHandlerFunc(func(params UpdateUserParams) middleware.Responder {
 			return middleware.NotImplemented("operation UpdateUser has not yet been implemented")
-		}),
-		GetRoomsOfHotelHandler: GetRoomsOfHotelHandlerFunc(func(params GetRoomsOfHotelParams) middleware.Responder {
-			return middleware.NotImplemented("operation GetRoomsOfHotel has not yet been implemented")
 		}),
 	}
 }
@@ -168,10 +161,6 @@ type TravelBookingPortalAPI struct {
 	//   - application/json
 	JSONProducer runtime.Producer
 
-	// AllBookingsHandler sets the operation handler for the all bookings operation
-	AllBookingsHandler AllBookingsHandler
-	// ConfirmedBookingHandler sets the operation handler for the confirmed booking operation
-	ConfirmedBookingHandler ConfirmedBookingHandler
 	// CreateBookingHandler sets the operation handler for the create booking operation
 	CreateBookingHandler CreateBookingHandler
 	// CreateCarHandler sets the operation handler for the create car operation
@@ -196,10 +185,14 @@ type TravelBookingPortalAPI struct {
 	GetBookingHandler GetBookingHandler
 	// GetBookingsHandler sets the operation handler for the get bookings operation
 	GetBookingsHandler GetBookingsHandler
+	// BookingsGetBookingsByDateTimeHandler sets the operation handler for the get bookings by date time operation
+	BookingsGetBookingsByDateTimeHandler bookings.GetBookingsByDateTimeHandler
 	// GetCarHandler sets the operation handler for the get car operation
 	GetCarHandler GetCarHandler
 	// GetCarsHandler sets the operation handler for the get cars operation
 	GetCarsHandler GetCarsHandler
+	// BookingsGetConfirmedBookingsHandler sets the operation handler for the get confirmed bookings operation
+	BookingsGetConfirmedBookingsHandler bookings.GetConfirmedBookingsHandler
 	// GetHotelHandler sets the operation handler for the get hotel operation
 	GetHotelHandler GetHotelHandler
 	// GetHotelsHandler sets the operation handler for the get hotels operation
@@ -208,14 +201,10 @@ type TravelBookingPortalAPI struct {
 	GetRoomHandler GetRoomHandler
 	// GetRoomsHandler sets the operation handler for the get rooms operation
 	GetRoomsHandler GetRoomsHandler
-	// GetServiceBookingsHandler sets the operation handler for the get service bookings operation
-	GetServiceBookingsHandler GetServiceBookingsHandler
 	// GetUserHandler sets the operation handler for the get user operation
 	GetUserHandler GetUserHandler
 	// GetUsersHandler sets the operation handler for the get users operation
 	GetUsersHandler GetUsersHandler
-	// SearchBookingHandler sets the operation handler for the search booking operation
-	SearchBookingHandler SearchBookingHandler
 	// UpdateBookingHandler sets the operation handler for the update booking operation
 	UpdateBookingHandler UpdateBookingHandler
 	// UpdateCarHandler sets the operation handler for the update car operation
@@ -226,8 +215,6 @@ type TravelBookingPortalAPI struct {
 	UpdateRoomHandler UpdateRoomHandler
 	// UpdateUserHandler sets the operation handler for the update user operation
 	UpdateUserHandler UpdateUserHandler
-	// GetRoomsOfHotelHandler sets the operation handler for the get rooms of hotel operation
-	GetRoomsOfHotelHandler GetRoomsOfHotelHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -305,12 +292,6 @@ func (o *TravelBookingPortalAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.AllBookingsHandler == nil {
-		unregistered = append(unregistered, "AllBookingsHandler")
-	}
-	if o.ConfirmedBookingHandler == nil {
-		unregistered = append(unregistered, "ConfirmedBookingHandler")
-	}
 	if o.CreateBookingHandler == nil {
 		unregistered = append(unregistered, "CreateBookingHandler")
 	}
@@ -347,11 +328,17 @@ func (o *TravelBookingPortalAPI) Validate() error {
 	if o.GetBookingsHandler == nil {
 		unregistered = append(unregistered, "GetBookingsHandler")
 	}
+	if o.BookingsGetBookingsByDateTimeHandler == nil {
+		unregistered = append(unregistered, "bookings.GetBookingsByDateTimeHandler")
+	}
 	if o.GetCarHandler == nil {
 		unregistered = append(unregistered, "GetCarHandler")
 	}
 	if o.GetCarsHandler == nil {
 		unregistered = append(unregistered, "GetCarsHandler")
+	}
+	if o.BookingsGetConfirmedBookingsHandler == nil {
+		unregistered = append(unregistered, "bookings.GetConfirmedBookingsHandler")
 	}
 	if o.GetHotelHandler == nil {
 		unregistered = append(unregistered, "GetHotelHandler")
@@ -365,17 +352,11 @@ func (o *TravelBookingPortalAPI) Validate() error {
 	if o.GetRoomsHandler == nil {
 		unregistered = append(unregistered, "GetRoomsHandler")
 	}
-	if o.GetServiceBookingsHandler == nil {
-		unregistered = append(unregistered, "GetServiceBookingsHandler")
-	}
 	if o.GetUserHandler == nil {
 		unregistered = append(unregistered, "GetUserHandler")
 	}
 	if o.GetUsersHandler == nil {
 		unregistered = append(unregistered, "GetUsersHandler")
-	}
-	if o.SearchBookingHandler == nil {
-		unregistered = append(unregistered, "SearchBookingHandler")
 	}
 	if o.UpdateBookingHandler == nil {
 		unregistered = append(unregistered, "UpdateBookingHandler")
@@ -391,9 +372,6 @@ func (o *TravelBookingPortalAPI) Validate() error {
 	}
 	if o.UpdateUserHandler == nil {
 		unregistered = append(unregistered, "UpdateUserHandler")
-	}
-	if o.GetRoomsOfHotelHandler == nil {
-		unregistered = append(unregistered, "GetRoomsOfHotelHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -483,14 +461,6 @@ func (o *TravelBookingPortalAPI) initHandlerCache() {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
 
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/booking/user/{userID}"] = NewAllBookings(o.context, o.AllBookingsHandler)
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/booking/confirmed"] = NewConfirmedBooking(o.context, o.ConfirmedBookingHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
@@ -542,11 +512,19 @@ func (o *TravelBookingPortalAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
+	o.handlers["GET"]["/bookings/datetime"] = bookings.NewGetBookingsByDateTime(o.context, o.BookingsGetBookingsByDateTimeHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
 	o.handlers["GET"]["/car/{carID}"] = NewGetCar(o.context, o.GetCarHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/car"] = NewGetCars(o.context, o.GetCarsHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/bookings/confirmed"] = bookings.NewGetConfirmedBookings(o.context, o.BookingsGetConfirmedBookingsHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -566,19 +544,11 @@ func (o *TravelBookingPortalAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/service/{ServiceID}/booking"] = NewGetServiceBookings(o.context, o.GetServiceBookingsHandler)
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
 	o.handlers["GET"]["/user/{userID}"] = NewGetUser(o.context, o.GetUserHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/user"] = NewGetUsers(o.context, o.GetUsersHandler)
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/booking/search"] = NewSearchBooking(o.context, o.SearchBookingHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
@@ -599,10 +569,6 @@ func (o *TravelBookingPortalAPI) initHandlerCache() {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
 	o.handlers["PUT"]["/user"] = NewUpdateUser(o.context, o.UpdateUserHandler)
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/hotel/{ID}/rooms"] = NewGetRoomsOfHotel(o.context, o.GetRoomsOfHotelHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

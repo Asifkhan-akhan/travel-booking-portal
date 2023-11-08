@@ -22,7 +22,7 @@ func Test_client_CreatepdateUser(t *testing.T) {
 		{
 			name: "success - room added in db",
 			args: args{user: &models.User{
-				ID:    33,
+
 				Name:  "khan",
 				Email: "wancloud@gmail.com",
 			}},
@@ -91,8 +91,7 @@ func Test_client_DeleteUser(t *testing.T) {
 		})
 	}
 }
-
-func Test_client_GetUser(t *testing.T) {
+func Test_client_ListUser(t *testing.T) {
 	// Set up the MongoDB client and collection for testing
 	os.Setenv("DB_PORT", "27017")
 	os.Setenv("DB_HOST", "localhost")
@@ -110,34 +109,30 @@ func Test_client_GetUser(t *testing.T) {
 		t.Logf("User created with ID: %d", createdUserID)
 	}
 
-	type args struct {
-		id int
-	}
-
 	tests := []struct {
-		name    string
-		args    args
-		want    []*models.User
-		wantErr bool
+		name           string
+		searchCriteria map[string]interface{}
+		want           []*models.User
+		wantErr        bool
 	}{
 		{
-			name:    "success - user get",
-			args:    args{id: createdUserID}, // Use the ID of the created user
-			want:    []*models.User{user},
-			wantErr: false,
+			name:           "success - user get",
+			searchCriteria: map[string]interface{}{"_id": createdUserID}, // Search by ID
+			want:           []*models.User{user},
+			wantErr:        false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := c.GetUser(tt.args.id)
+			got, err := c.ListUser(tt.searchCriteria)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetUser() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ListUser() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("GetUser() got = %v, want %v", got, tt.want)
+				t.Errorf("ListUser() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
