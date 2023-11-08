@@ -58,6 +58,31 @@ func (o *CreateUserCreated) WriteResponse(rw http.ResponseWriter, producer runti
 	}
 }
 
+// CreateUserBadRequestCode is the HTTP code returned for type CreateUserBadRequest
+const CreateUserBadRequestCode int = 400
+
+/*
+CreateUserBadRequest Bad Request - The request is invalid or contains errors
+
+swagger:response createUserBadRequest
+*/
+type CreateUserBadRequest struct {
+}
+
+// NewCreateUserBadRequest creates CreateUserBadRequest with default headers values
+func NewCreateUserBadRequest() *CreateUserBadRequest {
+
+	return &CreateUserBadRequest{}
+}
+
+// WriteResponse to the client
+func (o *CreateUserBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(400)
+}
+
 // CreateUserConflictCode is the HTTP code returned for type CreateUserConflict
 const CreateUserConflictCode int = 409
 

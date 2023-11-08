@@ -1,6 +1,10 @@
 package service
 
-import "travel-booking-portal/models"
+import (
+	"travel-booking-portal/models"
+
+	"github.com/pkg/errors"
+)
 
 func (s *Service) CreateHotel(hotel *models.Hotel) (int, error) {
 	hotelid, err := s.db.CreateOrUpdateHotel(hotel)
@@ -39,18 +43,26 @@ func (s *Service) DeleteHotel(hotelID int) error {
 }
 
 func (s *Service) CreateRoom(room *models.Room) (int, error) {
-	roomid, err := s.db.CreateOrUpdateRoom(room)
-	if err != nil {
-		return 0, err
+	hotel, _ := s.GetHotel(room.HotelID)
+	if len(hotel) > 0 {
+		roomid, err := s.db.CreateOrUpdateRoom(room)
+		if err != nil {
+			return 0, err
+		}
+		return roomid, nil
 	}
-	return roomid, nil
+	return 0, errors.New("Failed to fetch the hotel")
 }
 func (s *Service) UpdateRoom(room *models.Room) (int, error) {
-	roomid, err := s.db.CreateOrUpdateRoom(room)
-	if err != nil {
-		return 0, err
+	hotel, _ := s.GetHotel(room.HotelID)
+	if len(hotel) > 0 {
+		roomid, err := s.db.CreateOrUpdateRoom(room)
+		if err != nil {
+			return 0, err
+		}
+		return roomid, nil
 	}
-	return roomid, nil
+	return 0, errors.New("Failed to fetch the hotel")
 }
 func (s *Service) GetRoom(roomID int) ([]*models.Room, error) {
 	room, err := s.db.ListRoom(map[string]interface{}{"_id": roomID})

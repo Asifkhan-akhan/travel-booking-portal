@@ -1,10 +1,15 @@
 package service
 
 import (
+	"errors"
 	"travel-booking-portal/models"
 )
 
 func (s *Service) CreateUser(user *models.User) (int, error) {
+	if user.Email == "" || user.Name == "nil" {
+		return 0, errors.New("Username and email are required")
+
+	}
 	userid, err := s.db.CreateOrUpdateUser(user)
 	if err != nil {
 		return 0, err
@@ -13,6 +18,10 @@ func (s *Service) CreateUser(user *models.User) (int, error) {
 }
 
 func (s *Service) UpdateUser(user *models.User) (int, error) {
+	if user.Email == "" || user.Name == "nil" {
+		return 0, errors.New("Username and email are required")
+
+	}
 	userid, err := s.db.CreateOrUpdateUser(user)
 	if err != nil {
 		return 0, err

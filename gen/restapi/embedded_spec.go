@@ -38,7 +38,7 @@ func init() {
   "paths": {
     "/booking": {
       "get": {
-        "operationId": "GetBookings",
+        "operationId": "ListBookings",
         "responses": {
           "200": {
             "description": "List of bookings retrieved successfully",
@@ -48,6 +48,9 @@ func init() {
                 "$ref": "#/definitions/Booking"
               }
             }
+          },
+          "404": {
+            "description": "Booking not found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -68,14 +71,26 @@ func init() {
           }
         ],
         "responses": {
+          "200": {
+            "description": " updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Booking"
+            }
+          },
           "201": {
             "description": "Booking updated successfully",
             "schema": {
               "$ref": "#/definitions/Booking"
             }
           },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
+          },
           "404": {
             "description": "Booking not found"
+          },
+          "409": {
+            "description": "Booking already exists"
           },
           "500": {
             "description": "Internal Server Error"
@@ -101,6 +116,9 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Booking"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "409": {
             "description": "Booking already exists"
@@ -153,6 +171,9 @@ func init() {
           "204": {
             "description": "Booking deleted successfully"
           },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
+          },
           "404": {
             "description": "Booking not found"
           },
@@ -162,19 +183,19 @@ func init() {
         }
       }
     },
-    "/bookings/confirmed": {
+    "/bookings/confirmed/{userID}": {
       "get": {
         "tags": [
           "bookings"
         ],
         "summary": "Retrieve confirmed bookings for a user",
-        "operationId": "GetConfirmedBookings",
+        "operationId": "ListConfirmedBookings",
         "parameters": [
           {
             "type": "integer",
             "description": "User ID for filtering confirmed bookings",
             "name": "userID",
-            "in": "query",
+            "in": "path",
             "required": true
           }
         ],
@@ -191,32 +212,35 @@ func init() {
           "400": {
             "description": "Bad Request - Invalid input parameters"
           },
+          "404": {
+            "description": "Bookings not found"
+          },
           "500": {
             "description": "Internal Server Error"
           }
         }
       }
     },
-    "/bookings/datetime": {
+    "/bookings/{userID}/{dateTime}": {
       "get": {
         "tags": [
           "bookings"
         ],
         "summary": "Retrieve bookings for a user based on a datetime",
-        "operationId": "GetBookingsByDateTime",
+        "operationId": "ListBookingsByDateTime",
         "parameters": [
           {
             "type": "integer",
             "description": "User ID for filtering bookings",
             "name": "userID",
-            "in": "query",
+            "in": "path",
             "required": true
           },
           {
             "type": "string",
             "description": "Date and time for filtering bookings",
             "name": "dateTime",
-            "in": "query",
+            "in": "path",
             "required": true
           }
         ],
@@ -233,6 +257,9 @@ func init() {
           "400": {
             "description": "Bad Request - Invalid input parameters"
           },
+          "404": {
+            "description": "Bookings not found"
+          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -241,7 +268,7 @@ func init() {
     },
     "/car": {
       "get": {
-        "operationId": "GetCars",
+        "operationId": "ListCars",
         "responses": {
           "200": {
             "description": "List of Cars retrieved successfully",
@@ -274,11 +301,20 @@ func init() {
           }
         ],
         "responses": {
+          "200": {
+            "description": " updated successfully",
+            "schema": {
+              "$ref": "#/definitions/CarRental"
+            }
+          },
           "201": {
             "description": "CarRental updated successfully",
             "schema": {
               "$ref": "#/definitions/CarRental"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "404": {
             "description": "CarRental not found"
@@ -307,6 +343,9 @@ func init() {
             "schema": {
               "$ref": "#/definitions/CarRental"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "409": {
             "description": "CarRental already exists"
@@ -370,7 +409,7 @@ func init() {
     },
     "/hotel": {
       "get": {
-        "operationId": "GetHotels",
+        "operationId": "ListHotels",
         "responses": {
           "200": {
             "description": "List of Hotels retrieved successfully",
@@ -403,11 +442,20 @@ func init() {
           }
         ],
         "responses": {
+          "200": {
+            "description": " updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Hotel"
+            }
+          },
           "201": {
             "description": "Hotel updated successfully",
             "schema": {
               "$ref": "#/definitions/Hotel"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "404": {
             "description": "Hotel not found"
@@ -436,6 +484,9 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Hotel"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "409": {
             "description": "Hotel already exists"
@@ -499,7 +550,7 @@ func init() {
     },
     "/room": {
       "get": {
-        "operationId": "GetRooms",
+        "operationId": "ListRooms",
         "responses": {
           "200": {
             "description": "List of Rooms retrieved successfully",
@@ -532,11 +583,20 @@ func init() {
           }
         ],
         "responses": {
+          "200": {
+            "description": "Room updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Room"
+            }
+          },
           "201": {
             "description": "Room updated successfully",
             "schema": {
               "$ref": "#/definitions/Room"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "404": {
             "description": "Room not found"
@@ -565,6 +625,9 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Room"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "409": {
             "description": "Room already exists"
@@ -628,7 +691,7 @@ func init() {
     },
     "/user": {
       "get": {
-        "operationId": "GetUsers",
+        "operationId": "ListUsers",
         "responses": {
           "200": {
             "description": "List of Users retrieved successfully",
@@ -661,11 +724,20 @@ func init() {
           }
         ],
         "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
           "201": {
             "description": "User updated successfully",
             "schema": {
               "$ref": "#/definitions/User"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "404": {
             "description": "User already exists"
@@ -694,6 +766,9 @@ func init() {
             "schema": {
               "$ref": "#/definitions/User"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "409": {
             "description": "User already exists"
@@ -873,7 +948,7 @@ func init() {
   "paths": {
     "/booking": {
       "get": {
-        "operationId": "GetBookings",
+        "operationId": "ListBookings",
         "responses": {
           "200": {
             "description": "List of bookings retrieved successfully",
@@ -883,6 +958,9 @@ func init() {
                 "$ref": "#/definitions/Booking"
               }
             }
+          },
+          "404": {
+            "description": "Booking not found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -903,14 +981,26 @@ func init() {
           }
         ],
         "responses": {
+          "200": {
+            "description": " updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Booking"
+            }
+          },
           "201": {
             "description": "Booking updated successfully",
             "schema": {
               "$ref": "#/definitions/Booking"
             }
           },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
+          },
           "404": {
             "description": "Booking not found"
+          },
+          "409": {
+            "description": "Booking already exists"
           },
           "500": {
             "description": "Internal Server Error"
@@ -936,6 +1026,9 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Booking"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "409": {
             "description": "Booking already exists"
@@ -988,6 +1081,9 @@ func init() {
           "204": {
             "description": "Booking deleted successfully"
           },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
+          },
           "404": {
             "description": "Booking not found"
           },
@@ -997,19 +1093,19 @@ func init() {
         }
       }
     },
-    "/bookings/confirmed": {
+    "/bookings/confirmed/{userID}": {
       "get": {
         "tags": [
           "bookings"
         ],
         "summary": "Retrieve confirmed bookings for a user",
-        "operationId": "GetConfirmedBookings",
+        "operationId": "ListConfirmedBookings",
         "parameters": [
           {
             "type": "integer",
             "description": "User ID for filtering confirmed bookings",
             "name": "userID",
-            "in": "query",
+            "in": "path",
             "required": true
           }
         ],
@@ -1026,32 +1122,35 @@ func init() {
           "400": {
             "description": "Bad Request - Invalid input parameters"
           },
+          "404": {
+            "description": "Bookings not found"
+          },
           "500": {
             "description": "Internal Server Error"
           }
         }
       }
     },
-    "/bookings/datetime": {
+    "/bookings/{userID}/{dateTime}": {
       "get": {
         "tags": [
           "bookings"
         ],
         "summary": "Retrieve bookings for a user based on a datetime",
-        "operationId": "GetBookingsByDateTime",
+        "operationId": "ListBookingsByDateTime",
         "parameters": [
           {
             "type": "integer",
             "description": "User ID for filtering bookings",
             "name": "userID",
-            "in": "query",
+            "in": "path",
             "required": true
           },
           {
             "type": "string",
             "description": "Date and time for filtering bookings",
             "name": "dateTime",
-            "in": "query",
+            "in": "path",
             "required": true
           }
         ],
@@ -1068,6 +1167,9 @@ func init() {
           "400": {
             "description": "Bad Request - Invalid input parameters"
           },
+          "404": {
+            "description": "Bookings not found"
+          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -1076,7 +1178,7 @@ func init() {
     },
     "/car": {
       "get": {
-        "operationId": "GetCars",
+        "operationId": "ListCars",
         "responses": {
           "200": {
             "description": "List of Cars retrieved successfully",
@@ -1109,11 +1211,20 @@ func init() {
           }
         ],
         "responses": {
+          "200": {
+            "description": " updated successfully",
+            "schema": {
+              "$ref": "#/definitions/CarRental"
+            }
+          },
           "201": {
             "description": "CarRental updated successfully",
             "schema": {
               "$ref": "#/definitions/CarRental"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "404": {
             "description": "CarRental not found"
@@ -1142,6 +1253,9 @@ func init() {
             "schema": {
               "$ref": "#/definitions/CarRental"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "409": {
             "description": "CarRental already exists"
@@ -1205,7 +1319,7 @@ func init() {
     },
     "/hotel": {
       "get": {
-        "operationId": "GetHotels",
+        "operationId": "ListHotels",
         "responses": {
           "200": {
             "description": "List of Hotels retrieved successfully",
@@ -1238,11 +1352,20 @@ func init() {
           }
         ],
         "responses": {
+          "200": {
+            "description": " updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Hotel"
+            }
+          },
           "201": {
             "description": "Hotel updated successfully",
             "schema": {
               "$ref": "#/definitions/Hotel"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "404": {
             "description": "Hotel not found"
@@ -1271,6 +1394,9 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Hotel"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "409": {
             "description": "Hotel already exists"
@@ -1334,7 +1460,7 @@ func init() {
     },
     "/room": {
       "get": {
-        "operationId": "GetRooms",
+        "operationId": "ListRooms",
         "responses": {
           "200": {
             "description": "List of Rooms retrieved successfully",
@@ -1367,11 +1493,20 @@ func init() {
           }
         ],
         "responses": {
+          "200": {
+            "description": "Room updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Room"
+            }
+          },
           "201": {
             "description": "Room updated successfully",
             "schema": {
               "$ref": "#/definitions/Room"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "404": {
             "description": "Room not found"
@@ -1400,6 +1535,9 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Room"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "409": {
             "description": "Room already exists"
@@ -1463,7 +1601,7 @@ func init() {
     },
     "/user": {
       "get": {
-        "operationId": "GetUsers",
+        "operationId": "ListUsers",
         "responses": {
           "200": {
             "description": "List of Users retrieved successfully",
@@ -1496,11 +1634,20 @@ func init() {
           }
         ],
         "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
           "201": {
             "description": "User updated successfully",
             "schema": {
               "$ref": "#/definitions/User"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "404": {
             "description": "User already exists"
@@ -1529,6 +1676,9 @@ func init() {
             "schema": {
               "$ref": "#/definitions/User"
             }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
           },
           "409": {
             "description": "User already exists"

@@ -36,6 +36,31 @@ func (o *DeleteBookingNoContent) WriteResponse(rw http.ResponseWriter, producer 
 	rw.WriteHeader(204)
 }
 
+// DeleteBookingBadRequestCode is the HTTP code returned for type DeleteBookingBadRequest
+const DeleteBookingBadRequestCode int = 400
+
+/*
+DeleteBookingBadRequest Bad Request - The request is invalid or contains errors
+
+swagger:response deleteBookingBadRequest
+*/
+type DeleteBookingBadRequest struct {
+}
+
+// NewDeleteBookingBadRequest creates DeleteBookingBadRequest with default headers values
+func NewDeleteBookingBadRequest() *DeleteBookingBadRequest {
+
+	return &DeleteBookingBadRequest{}
+}
+
+// WriteResponse to the client
+func (o *DeleteBookingBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(400)
+}
+
 // DeleteBookingNotFoundCode is the HTTP code returned for type DeleteBookingNotFound
 const DeleteBookingNotFoundCode int = 404
 

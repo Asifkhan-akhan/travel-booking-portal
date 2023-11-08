@@ -58,6 +58,31 @@ func (o *CreateBookingCreated) WriteResponse(rw http.ResponseWriter, producer ru
 	}
 }
 
+// CreateBookingBadRequestCode is the HTTP code returned for type CreateBookingBadRequest
+const CreateBookingBadRequestCode int = 400
+
+/*
+CreateBookingBadRequest Bad Request - The request is invalid or contains errors
+
+swagger:response createBookingBadRequest
+*/
+type CreateBookingBadRequest struct {
+}
+
+// NewCreateBookingBadRequest creates CreateBookingBadRequest with default headers values
+func NewCreateBookingBadRequest() *CreateBookingBadRequest {
+
+	return &CreateBookingBadRequest{}
+}
+
+// WriteResponse to the client
+func (o *CreateBookingBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
+	rw.WriteHeader(400)
+}
+
 // CreateBookingConflictCode is the HTTP code returned for type CreateBookingConflict
 const CreateBookingConflictCode int = 409
 

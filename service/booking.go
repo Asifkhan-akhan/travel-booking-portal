@@ -31,6 +31,9 @@ Thank you for choosing our services.
 }
 
 func (s *Service) CreateBooking(booking *models.Booking) (int, error) {
+	if booking.ToDate.Before(booking.FromDate) || booking.ToDate.Equal(booking.FromDate) || booking.ToDate.Before(time.Now()) {
+		return 0, errors.New("Incorrect times are given")
+	}
 	bookingID, err := s.db.CreateOrUpdateBooking(booking)
 	if err != nil {
 		return 0, err
@@ -40,6 +43,7 @@ func (s *Service) CreateBooking(booking *models.Booking) (int, error) {
 	durationToWait := emailTime.Sub(time.Now())
 
 	if durationToWait > 0 {
+
 		users, err := s.db.ListUser(map[string]interface{}{"_id": booking.UserID})
 		if err != nil {
 			return 0, err
@@ -47,6 +51,8 @@ func (s *Service) CreateBooking(booking *models.Booking) (int, error) {
 		if len(users) > 0 {
 			user := users[0]
 			go scheduleEmail(user.Email, durationToWait)
+		} else {
+			return 0, errors.New("No given user find")
 		}
 	}
 
@@ -60,11 +66,12 @@ func scheduleEmail(email string, durationToWait time.Duration) {
 
 func (s *Service) UpdateBooking(booking *models.Booking) (int, error) {
 
-	existingBookings, err := s.GetBooking(booking.ID)
-	existingBooking := existingBookings[0]
-	if err != nil {
-		return 0, err
+	existingBookings, _ := s.GetBooking(booking.ID)
+	if len(existingBookings) == 0 {
+		return 0, errors.New("Booking not found")
 	}
+
+	existingBooking := existingBookings[0]
 
 	// Check if the booking is confirmed
 	if existingBooking.Confirmed {
@@ -77,7 +84,9 @@ func (s *Service) UpdateBooking(booking *models.Booking) (int, error) {
 
 		return 0, errors.New("Cannot edit a booking less than 48 hours before the booking date")
 	}
-
+	if booking.ToDate.Before(booking.FromDate) || booking.ToDate.Equal(booking.FromDate) || booking.ToDate.Before(time.Now()) {
+		return 0, errors.New("Incorrect times are given")
+	}
 	bookingID, err := s.db.CreateOrUpdateBooking(booking)
 	if err != nil {
 		return 0, err
@@ -88,10 +97,16 @@ func (s *Service) UpdateBooking(booking *models.Booking) (int, error) {
 
 func (s *Service) DeleteBooking(bookingID int) error {
 	bookings, err := s.GetBooking(bookingID)
-	booking := bookings[0]
 	if err != nil {
 		return err
 	}
+
+	if len(bookings) == 0 {
+		return errors.New("Booking not found")
+	}
+
+	booking := bookings[0]
+
 	if booking.Confirmed {
 		return errors.New("Cannot delete a confirmed booking")
 	}
@@ -99,12 +114,10 @@ func (s *Service) DeleteBooking(bookingID int) error {
 	timeDifference := booking.FromDate.Sub(time.Now())
 
 	if timeDifference < 48*time.Hour {
-
-		return errors.New("Cannot delete a booking less than 48 hours before the booking date")
+		return errors.New("Cannot delete a booking less than 48 hours before the booking time")
 	}
 
 	return s.db.DeleteBooking(bookingID)
-
 }
 
 // GetBookingByID retrieves a booking by its ID.
@@ -138,30 +151,22 @@ func (s *Service) ListBookings() ([]*models.Booking, error) {
 
 // GetBookingsByDateTime retrieves bookings for a user based on a datetime.
 func (s *Service) GetBookingsByDateTime(userID int, dateTime time.Time) ([]*models.Booking, error) {
-	// Calculate the range of dates by setting `fromDate` to the start of the day and `toDate` to the end of the day.
-	fromDate := time.Date(dateTime.Year(), dateTime.Month(), dateTime.Day(), 0, 0, 0, 0, dateTime.Location())
-	toDate := time.Date(dateTime.Year(), dateTime.Month(), dateTime.Day(), 23, 59, 59, 999999999, dateTime.Location())
 
-	// Create a search parameter with user ID and date range.
 	searchParams := map[string]interface{}{
-		"UserID":   userID,
-		"FromDate": fromDate,
-		"ToDate":   toDate,
+		"user_id":   userID,
+		"from_date": dateTime,
 	}
 
-	// Call the data layer method to retrieve the bookings within the specified date range.
 	bookings, err := s.db.ListBooking(searchParams)
 	if err != nil {
-		// Handle any errors that may occur.
 		return nil, err
 	}
 
 	return bookings, nil
 }
 func (s *Service) ListConfirmedBookings(userID int) ([]*models.Booking, error) {
-	// Create a search parameter with the user's ID.
 	searchParams := map[string]interface{}{
-		"UserID":    userID,
+		"user_id":   userID,
 		"confirmed": true,
 	}
 
