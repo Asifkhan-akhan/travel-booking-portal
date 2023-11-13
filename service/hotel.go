@@ -1,6 +1,7 @@
 package service
 
 import (
+	"strconv"
 	"travel-booking-portal/models"
 
 	"github.com/pkg/errors"
@@ -43,16 +44,37 @@ func (s *Service) DeleteHotel(hotelID int) error {
 }
 
 func (s *Service) CreateRoom(room *models.Room) (int, error) {
-	hotel, _ := s.GetHotel(room.HotelID)
+	hotel, err := s.GetHotel(room.HotelID)
+	if err != nil {
+		return 0, err
+	}
+
 	if len(hotel) > 0 {
-		roomid, err := s.db.CreateOrUpdateRoom(room)
+		//checks if the room with the same room number exists in this hotel
+		oldRoom, err := s.db.ListRoom(map[string]interface{}{"number": room.Number, "hotel_id": hotel[0].ID})
 		if err != nil {
 			return 0, err
 		}
-		return roomid, nil
+		hotel := hotel[0]
+		if len(oldRoom) == 0 {
+			if roomNumber, err := strconv.Atoi(room.Number); err != nil {
+				return 0, errors.Wrap(err, "failed to convert room number to integer")
+			} else if roomNumber > hotel.Rooms {
+				return 0, errors.New("Number of room exceeds the hotel's capacity")
+			}
+
+			roomID, err := s.db.CreateOrUpdateRoom(room)
+			if err != nil {
+				return 0, err
+			}
+			return roomID, nil
+		}
+		return 0, errors.New("Room with this number already exists")
 	}
+
 	return 0, errors.New("Failed to fetch the hotel")
 }
+
 func (s *Service) UpdateRoom(room *models.Room) (int, error) {
 	hotel, _ := s.GetHotel(room.HotelID)
 	if len(hotel) > 0 {

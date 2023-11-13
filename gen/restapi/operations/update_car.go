@@ -30,7 +30,7 @@ func NewUpdateCar(ctx *middleware.Context, handler UpdateCarHandler) *UpdateCar 
 }
 
 /*
-	UpdateCar swagger:route PUT /car updateCar
+	UpdateCar swagger:route PUT /car/{carID} updateCar
 
 UpdateCar update car API
 */

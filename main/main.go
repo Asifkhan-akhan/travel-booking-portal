@@ -1,12 +1,13 @@
 package main
 
 import (
+	"fmt"
+	"runtime"
 	"strconv"
 
 	loads "github.com/go-openapi/loads"
 	"github.com/spf13/viper"
-
-	runtime "travel-booking-portal"
+	runTime "travel-booking-portal"
 	"travel-booking-portal/config"
 	"travel-booking-portal/gen/restapi"
 	"travel-booking-portal/handlers"
@@ -18,14 +19,20 @@ func main() {
 		panic(err)
 	}
 
-	rt, err := runtime.NewRuntime()
+	rt, err := runTime.NewRuntime()
 	if err != nil {
 		panic(err)
 	}
 
 	api := handlers.NewHandler(rt, swaggerSpec)
 	server := restapi.NewServer(api)
-	defer server.Shutdown()
+	//defer server.Shutdown()
+	defer func() {
+		if err := server.Shutdown(); err != nil {
+			// Handle the error, e.g., log it or take other appropriate action.
+			panic(err)
+		}
+	}()
 
 	server.Host = viper.GetString(config.ServerHost)
 
@@ -43,6 +50,8 @@ func main() {
 
 	server.ConfigureAPI()
 
+	numGoroutines := runtime.NumGoroutine()
+	fmt.Printf("Number of active goroutines: %d\n", numGoroutines)
 	if err := server.Serve(); err != nil {
 		panic(err)
 	}

@@ -9,11 +9,18 @@ import (
 	"errors"
 	"net/url"
 	golangswaggerpaths "path"
+	"strings"
+
+	"github.com/go-openapi/swag"
 )
 
 // UpdateRoomURL generates an URL for the update room operation
 type UpdateRoomURL struct {
+	RoomID int64
+
 	_basePath string
+	// avoid unkeyed usage
+	_ struct{}
 }
 
 // WithBasePath sets the base path for this url builder, only required when it's different from the
@@ -35,7 +42,14 @@ func (o *UpdateRoomURL) SetBasePath(bp string) {
 func (o *UpdateRoomURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/room"
+	var _path = "/room/{roomID}"
+
+	roomID := swag.FormatInt64(o.RoomID)
+	if roomID != "" {
+		_path = strings.Replace(_path, "{roomID}", roomID, -1)
+	} else {
+		return nil, errors.New("roomId is required on UpdateRoomURL")
+	}
 
 	_basePath := o._basePath
 	if _basePath == "" {

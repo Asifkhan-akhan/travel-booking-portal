@@ -21,7 +21,7 @@ type updateCar struct {
 func (d *updateCar) Handle(params operations.UpdateCarParams) middleware.Responder {
 
 	car := &models.CarRental{
-		ID:     int(params.Car.ID),
+		ID:     int(params.CarID),
 		Booked: params.Car.Booked,
 	}
 	if _, err := d.rt.Service().UpdateCarRental(car); err != nil {

@@ -23,10 +23,10 @@ type updateBooking struct {
 func (d *updateBooking) Handle(params operations.UpdateBookingParams) middleware.Responder {
 
 	booking := &models.Booking{
-		ID:          int(params.Booking.ID),
+		ID:          int(params.BookingID),
 		UserID:      int(params.Booking.UserID),
 		ServiceType: params.Booking.ServiceType,
-		ServiceID:   int(params.Booking.UserID),
+		ServiceID:   int(params.Booking.ServiceID),
 		FromDate:    time.Time(params.Booking.FromDate),
 		ToDate:      time.Time(params.Booking.ToDate),
 		Confirmed:   params.Booking.Confirmed,
@@ -42,7 +42,7 @@ func (d *updateBooking) Handle(params operations.UpdateBookingParams) middleware
 			log().Errorf(err.Error())
 			return operations.NewDeleteBookingBadRequest()
 		}
-		if err.Error() == "Cannot edit a booking less than 48 hours before the booking date" {
+		if err.Error() == "Cannot edit a booking less than 48 hours before the booking service start" {
 			log().Errorf(err.Error())
 			return operations.NewDeleteBookingBadRequest()
 		}

@@ -30,7 +30,7 @@ func NewUpdateHotel(ctx *middleware.Context, handler UpdateHotelHandler) *Update
 }
 
 /*
-	UpdateHotel swagger:route PUT /hotel updateHotel
+	UpdateHotel swagger:route PUT /hotel/{hotelID} updateHotel
 
 UpdateHotel update hotel API
 */

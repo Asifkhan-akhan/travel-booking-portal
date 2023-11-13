@@ -18,7 +18,7 @@ type updateuser struct {
 
 func (d *updateuser) Handle(params operations.UpdateUserParams) middleware.Responder {
 	up_user := &models.User{
-		ID:    int(params.User.ID),
+		ID:    int(params.UserID),
 		Name:  params.User.Name,
 		Email: params.User.Email,
 	}
