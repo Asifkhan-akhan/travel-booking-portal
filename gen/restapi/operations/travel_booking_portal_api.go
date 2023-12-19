@@ -552,23 +552,23 @@ func (o *TravelBookingPortalAPI) initHandlerCache() {
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/booking"] = NewUpdateBooking(o.context, o.UpdateBookingHandler)
+	o.handlers["PUT"]["/booking/{bookingID}"] = NewUpdateBooking(o.context, o.UpdateBookingHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/car"] = NewUpdateCar(o.context, o.UpdateCarHandler)
+	o.handlers["PUT"]["/car/{carID}"] = NewUpdateCar(o.context, o.UpdateCarHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/hotel"] = NewUpdateHotel(o.context, o.UpdateHotelHandler)
+	o.handlers["PUT"]["/hotel/{hotelID}"] = NewUpdateHotel(o.context, o.UpdateHotelHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/room"] = NewUpdateRoom(o.context, o.UpdateRoomHandler)
+	o.handlers["PUT"]["/room/{roomID}"] = NewUpdateRoom(o.context, o.UpdateRoomHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/user"] = NewUpdateUser(o.context, o.UpdateUserHandler)
+	o.handlers["PUT"]["/user/{userID}"] = NewUpdateUser(o.context, o.UpdateUserHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

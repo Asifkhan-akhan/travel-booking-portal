@@ -24,7 +24,7 @@ func (d *listBookingbyDateTimeHandler) Handle(params bookings.ListBookingsByDate
 	datetime := params.DateTime
 
 	// Parse the string into a time.Time value.
-	parseddateTime, err := time.Parse(time.RFC3339Nano, datetime)
+	parseddateTime, _ := time.Parse(time.RFC3339Nano, datetime)
 	users, err := d.rt.Service().GetBookingsByDateTime(userID, parseddateTime)
 	if err != nil {
 		return bookings.NewListConfirmedBookingsInternalServerError()

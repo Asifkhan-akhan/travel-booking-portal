@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"math/big"
+	"sync"
+	"travel-booking-portal/db"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
@@ -13,7 +15,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"travel-booking-portal/config"
-	"travel-booking-portal/db"
 	"travel-booking-portal/models"
 )
 
@@ -30,16 +31,26 @@ type client struct {
 }
 
 // NewClient initializes a mysql database connection
+var (
+	once     sync.Once
+	instance db.DataStore
+)
+
 func NewClient() (db.DataStore, error) {
-	uri := fmt.Sprintf("mongodb://%s:%s", viper.GetString(config.DbHost), viper.GetString(config.DbPort))
-	log().Infof("initializing mongodb: %s", uri)
-	cli, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
-	if err != nil {
+	once.Do(func() {
+		uri := fmt.Sprintf("mongodb://%s:%s", viper.GetString(config.DbHost), viper.GetString(config.DbPort))
+		log().Infof("Initializing MongoDB: %s", uri)
 
-		return nil, errors.Wrap(err, "failed to connect to db")
-	}
+		cli, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
+		if err != nil {
+			log().Errorf("Failed to connect to MongoDB: %v", err)
+			return
+		}
 
-	return &client{conn: cli}, nil
+		instance = &client{conn: cli}
+	})
+
+	return instance, nil
 }
 
 func generateUniqueID() int {
@@ -90,9 +101,10 @@ func (c *client) CreateOrUpdateBooking(booking *models.Booking) (int, error) {
 			var dbbooking models.Booking
 
 			if err := result.Decode(&dbbooking); err != nil {
-				errors.New("Error decoding result:" + err.Error())
+				return 0, errors.Wrap(err, "Error decoding result:"+err.Error())
 
 			}
+
 			_, err := collection.UpdateOne(context.TODO(), filter, update, options.Update())
 			if err != nil {
 
@@ -140,11 +152,12 @@ func (c *client) CreateOrUpdateHotel(hotel *models.Hotel) (int, error) {
 
 		collection := c.conn.Database(viper.GetString(config.DbName)).Collection(hotelCollection)
 
-		update := bson.D{{"$set", hotel}}
+		//update := bson.D{{"$set", hotel}}
+		update := bson.D{{Key: "$set", Value: hotel}}
 
 		opts := options.Update().SetUpsert(true)
 
-		_, err := collection.UpdateOne(context.TODO(), bson.D{{"_id", hotel.ID}}, update, opts)
+		_, err := collection.UpdateOne(context.TODO(), bson.D{{Key: "_id", Value: hotel.ID}}, update, opts)
 
 		if err != nil {
 			return 0, errors.Wrap(err, "failed to update hotel")
@@ -171,10 +184,10 @@ func (c *client) CreateOrUpdateRoom(room *models.Room) (int, error) {
 	if room.ID != 0 {
 		// ID is not empty; this is an update, not a creation.
 		collection := c.conn.Database(viper.GetString(config.DbName)).Collection(roomCollection)
-		update := bson.D{{"$set", room}}
+		update := bson.D{{Key: "$set", Value: room}}
 		opts := options.Update().SetUpsert(true)
 
-		_, err := collection.UpdateOne(context.TODO(), bson.D{{"_id", room.ID}}, update, opts)
+		_, err := collection.UpdateOne(context.TODO(), bson.D{{Key: "_id", Value: room.ID}}, update, opts)
 		if err != nil {
 			return 0, errors.Wrap(err, "failed to update room")
 		}
@@ -202,7 +215,7 @@ func (c *client) CreateOrUpdateUser(user *models.User) (int, error) {
 		collection := c.conn.Database(viper.GetString(config.DbName)).Collection(userCollection)
 		opts := options.Update().SetUpsert(true)
 
-		_, err := collection.UpdateOne(context.TODO(), bson.D{{"_id", user.ID}}, bson.D{{"$set", user}}, opts)
+		_, err := collection.UpdateOne(context.TODO(), bson.D{{Key: "_id", Value: user.ID}}, bson.D{{Key: "$set", Value: user}}, opts)
 		if err != nil {
 			return 0, errors.Wrap(err, "failed to update user")
 		}
@@ -290,13 +303,11 @@ func (c *client) ListBooking(searchCriteria map[string]interface{}) ([]*models.B
 	// Create a filter based on the search parameters
 	filter := bson.M{}
 
-	if searchCriteria != nil {
-		for key, value := range searchCriteria {
-			filter[key] = value
-		}
+	for key, value := range searchCriteria {
+		filter[key] = value
 	}
 
-	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{"_id", 1}}))
+	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{Key: "_id", Value: 1}}))
 
 	if err != nil {
 		return nil, err
@@ -319,13 +330,12 @@ func (c *client) ListCarRental(searchCriteria map[string]interface{}) ([]*models
 	filter := bson.M{}
 
 	// Populate the filter based on the provided search criteria.
-	if searchCriteria != nil {
-		for key, value := range searchCriteria {
-			filter[key] = value
-		}
+
+	for key, value := range searchCriteria {
+		filter[key] = value
 	}
 
-	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{"_id", 1}}))
+	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{Key: "_id", Value: 1}}))
 	if err != nil {
 		return nil, err
 	}
@@ -346,13 +356,11 @@ func (c *client) ListHotel(searchCriteria map[string]interface{}) ([]*models.Hot
 
 	filter := bson.M{}
 
-	if searchCriteria != nil {
-		for key, value := range searchCriteria {
-			filter[key] = value
-		}
+	for key, value := range searchCriteria {
+		filter[key] = value
 	}
 
-	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{"_id", 1}}))
+	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{Key: "_id", Value: 1}}))
 
 	if err != nil {
 		return nil, err
@@ -374,12 +382,11 @@ func (c *client) ListRoom(searchCriteria map[string]interface{}) ([]*models.Room
 
 	filter := bson.M{}
 
-	if searchCriteria != nil {
-		for key, value := range searchCriteria {
-			filter[key] = value
-		}
+	for key, value := range searchCriteria {
+		filter[key] = value
 	}
-	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{"_id", 1}}))
+
+	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{Key: "_id", Value: 1}}))
 	if err != nil {
 		return nil, err
 	}
@@ -400,13 +407,11 @@ func (c *client) ListUser(searchCriteria map[string]interface{}) ([]*models.User
 
 	filter := bson.M{}
 
-	if searchCriteria != nil {
-		for key, value := range searchCriteria {
-			filter[key] = value
-		}
+	for key, value := range searchCriteria {
+		filter[key] = value
 	}
 
-	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{"_id", 1}}))
+	cursor, err = collection.Find(context.TODO(), filter, options.Find().SetSort(bson.D{{Key: "_id", Value: 1}}))
 	if err != nil {
 		return nil, err
 	}

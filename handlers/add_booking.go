@@ -23,7 +23,7 @@ func (d *createBookingHandler) Handle(params operations.CreateBookingParams) mid
 	id, err := d.rt.Service().CreateBooking(&models.Booking{
 		UserID:      int(params.Booking.UserID),
 		ServiceType: params.Booking.ServiceType,
-		ServiceID:   int(params.Booking.UserID),
+		ServiceID:   int(params.Booking.ServiceID),
 		FromDate:    time.Time(params.Booking.FromDate),
 		ToDate:      time.Time(params.Booking.ToDate),
 		Confirmed:   params.Booking.Confirmed,

@@ -34,9 +34,28 @@ paths:
           description: "User already exists"
         500:
           description: "Internal Server Error"
+    get:
+      operationId: "ListUsers"
+      responses:
+        200:
+          description: "List of Users retrieved successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+        404:
+          description: "User not found"
+        500:
+          description: "Internal Server Error"
+  /user/{userID}:
     put:
       operationId: "UpdateUser"
       parameters:
+        - in: "path"
+          name: "userID"
+          description: "id of object to update"
+          required: true
+          type: "integer"
         - in: "body"
           name: "user"
           description: "User object to update"
@@ -59,20 +78,6 @@ paths:
           description: "User already exists"
         500:
           description: "Internal Server Error"
-    get:
-      operationId: "ListUsers"
-      responses:
-        200:
-          description: "List of Users retrieved successfully"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/User"
-        404:
-          description: "User not found"
-        500:
-          description: "Internal Server Error"
-  /user/{userID}:
     get:
       operationId: "GetUser"
       parameters:
@@ -126,14 +131,32 @@ paths:
           description: "Bad Request - The request is invalid or contains errors"
         409:
           description: "Booking already exists"
-
-        409:
-          description: "Booking already exists"
         500:
           description: "Internal Server Error"
+
+    get:
+      operationId: "ListBookings"
+      responses:
+        200:
+          description: "List of bookings retrieved successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Booking"
+        404:
+          description: "Booking not found"
+
+        500:
+          description: "Internal Server Error"
+  /booking/{bookingID}:
     put:
       operationId: "UpdateBooking"
       parameters:
+        - in: "path"
+          name: "bookingID"
+          description: "Booking object to update"
+          required: true
+          type: "integer"
         - in: "body"
           name: "booking"
           description: "Booking object to update"
@@ -153,26 +176,10 @@ paths:
           description: "Bad Request - The request is invalid or contains errors"
         409:
           description: "Booking already exists"
-
         404:
           description: "Booking not found"
         500:
           description: "Internal Server Error"
-    get:
-      operationId: "ListBookings"
-      responses:
-        200:
-          description: "List of bookings retrieved successfully"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Booking"
-        404:
-          description: "Booking not found"
-
-        500:
-          description: "Internal Server Error"
-  /booking/{bookingID}:
     get:
       operationId: "GetBooking"
       parameters:
@@ -229,9 +236,28 @@ paths:
           description: "Bad Request - The request is invalid or contains errors"
         500:
           description: "Internal Server Error"
+    get:
+      operationId: "ListCars"
+      responses:
+        200:
+          description: "List of Cars retrieved successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/CarRental"
+        404:
+          description: "Cars not found"
+        500:
+          description: "Internal Server Error"
+  /car/{carID}:
     put:
       operationId: "UpdateCar"
       parameters:
+        - in: "path"
+          name: "carID"
+          description: "CarRental ID to be updated"
+          required: true
+          type: "integer"
         - in: "body"
           name: "car"
           description: "CarRental object toupdate"
@@ -253,20 +279,6 @@ paths:
           description: "Bad Request - The request is invalid or contains errors"
         500:
           description: "Internal Server Error"
-    get:
-      operationId: "ListCars"
-      responses:
-        200:
-          description: "List of Cars retrieved successfully"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/CarRental"
-        404:
-          description: "Cars not found"
-        500:
-          description: "Internal Server Error"
-  /car/{carID}:
     get:
       operationId: "GetCar"
       parameters:
@@ -321,9 +333,28 @@ paths:
           description: "Hotel already exists"
         500:
           description: "Internal Server Error"
+    get:
+      operationId: "ListHotels"
+      responses:
+        200:
+          description: "List of Hotels retrieved successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Hotel"
+        404:
+          description: "Hotels not found"
+        500:
+          description: "Internal Server Error"
+  /hotel/{hotelID}:
     put:
       operationId: "UpdateHotel"
       parameters:
+        - in: "path"
+          name: "hotelID"
+          description: "id of hotel to be updated"
+          required: true
+          type: "integer"
         - in: "body"
           name: "hotel"
           description: "Hotel object to  update"
@@ -345,20 +376,6 @@ paths:
           description: "Hotel not found"
         500:
           description: "Internal Server Error"
-    get:
-      operationId: "ListHotels"
-      responses:
-        200:
-          description: "List of Hotels retrieved successfully"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Hotel"
-        404:
-          description: "Hotels not found"
-        500:
-          description: "Internal Server Error"
-  /hotel/{hotelID}:
     get:
       operationId: "GetHotel"
       parameters:
@@ -412,9 +429,29 @@ paths:
           description: "Room already exists"
         500:
           description: "Internal Server Error"
+
+    get:
+      operationId: "ListRooms"
+      responses:
+        200:
+          description: "List of Rooms retrieved successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Room"
+        404:
+          description: "Rooms not found"
+        500:
+          description: "Internal Server Error"
+  /room/{roomID}:
     put:
       operationId: "UpdateRoom"
       parameters:
+        - in: "path"
+          name: "roomID"
+          description: "id of the room to be updated"
+          required: true
+          type: "integer"
         - in: "body"
           name: "room"
           description: "Room object to  update"
@@ -436,20 +473,6 @@ paths:
           description: "Room not found"
         500:
           description: "Internal Server Error"
-    get:
-      operationId: "ListRooms"
-      responses:
-        200:
-          description: "List of Rooms retrieved successfully"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Room"
-        404:
-          description: "Rooms not found"
-        500:
-          description: "Internal Server Error"
-  /room/{roomID}:
     get:
       operationId: "GetRoom"
       parameters:

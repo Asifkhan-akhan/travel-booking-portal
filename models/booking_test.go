@@ -14,6 +14,7 @@ func TestBooking_Map(t *testing.T) {
 		ServiceID   int
 
 		FromDate  time.Time
+		ToDate    time.Time
 		Confirmed bool
 		Penalty   bool
 		Paid      bool
@@ -31,6 +32,7 @@ func TestBooking_Map(t *testing.T) {
 				ServiceType: "CarRental",
 				ServiceID:   2,
 				FromDate:    time.Date(2023, 10, 23, 12, 0, 0, 0, time.UTC), // Create a valid time.Time value
+				ToDate:      time.Date(2023, 10, 23, 13, 0, 0, 0, time.UTC),
 				Confirmed:   true,
 				Penalty:     false,
 				Paid:        true,
@@ -41,6 +43,7 @@ func TestBooking_Map(t *testing.T) {
 				"service_type": "CarRental",
 				"service_id":   2,
 				"from_date":    time.Date(2023, 10, 23, 12, 0, 0, 0, time.UTC), // Create a valid time.Time value
+				"to_date":      time.Date(2023, 10, 23, 13, 0, 0, 0, time.UTC),
 				"confirmed":    true,
 				"penalty":      false,
 				"paid":         true,
@@ -54,6 +57,7 @@ func TestBooking_Map(t *testing.T) {
 				ServiceType: "CarRental",
 				ServiceID:   2,
 				FromDate:    time.Date(2023, 10, 23, 12, 0, 0, 0, time.UTC), // Create a valid time.Time value
+				ToDate:      time.Date(2023, 10, 23, 13, 0, 0, 0, time.UTC),
 				Confirmed:   true,
 				Penalty:     false,
 				Paid:        true,
@@ -64,6 +68,7 @@ func TestBooking_Map(t *testing.T) {
 				"service_type": "CarRental",
 				"service_id":   2,
 				"from_date":    time.Date(2023, 10, 23, 12, 0, 0, 0, time.UTC), // Create a valid time.Time value
+				"to_date":      time.Date(2023, 10, 23, 13, 0, 0, 0, time.UTC),
 				"confirmed":    true,
 				"penalty":      false,
 				"paid":         true,
@@ -79,6 +84,7 @@ func TestBooking_Map(t *testing.T) {
 				ServiceType: tt.fields.ServiceType,
 				ServiceID:   tt.fields.ServiceID,
 				FromDate:    tt.fields.FromDate,
+				ToDate:      tt.fields.ToDate,
 				Confirmed:   tt.fields.Confirmed,
 				Penalty:     tt.fields.Penalty,
 				Paid:        tt.fields.Paid,
@@ -109,7 +115,7 @@ func TestBooking_Names(t *testing.T) {
 		{
 			name:   "success - names of booking struct fields",
 			fields: fields{},
-			want:   []string{"id", "user_id", "service_type", "service_id", "from_date", "confirmed", "penalty", "paid"},
+			want:   []string{"id", "user_id", "service_type", "service_id", "from_date", "to_date", "confirmed", "penalty", "paid"},
 		},
 	}
 
@@ -121,6 +127,7 @@ func TestBooking_Names(t *testing.T) {
 				ServiceType: tt.fields.ServiceType,
 				ServiceID:   tt.fields.ServiceID,
 				FromDate:    tt.fields.Date,
+				ToDate:      tt.fields.Date,
 				Confirmed:   tt.fields.Confirmed,
 				Penalty:     tt.fields.Penalty,
 				Paid:        tt.fields.Paid,

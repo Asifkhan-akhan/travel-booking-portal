@@ -21,7 +21,7 @@ type updateHotel struct {
 func (d *updateHotel) Handle(params operations.UpdateHotelParams) middleware.Responder {
 
 	hotel := &models.Hotel{
-		ID:          int(params.Hotel.ID),
+		ID:          int(params.HotelID),
 		Name:        params.Hotel.Name,
 		Location:    params.Hotel.Location,
 		Description: params.Hotel.Description,

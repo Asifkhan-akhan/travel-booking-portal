@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"log"
 	"net/smtp"
 	"time"
 
@@ -15,11 +16,9 @@ import (
 func sendEmail(receiverEmail string) {
 	auth := smtp.PlainAuth("", viper.GetString(config.EmailSMTPUsername), viper.GetString(config.EmailSMTPPassword), viper.GetString(config.EmailSMTPHost))
 	subject := "Reminder for Your Booking"
-	body := fmt.Sprintf(`Dear User,
-This is a reminder for your upcoming %s (ID: %d). Your service is scheduled to start in 5 minutes.
-Thank you for choosing our services.
-
-`)
+	body := "Dear User,\n" +
+		"This is a reminder for your upcoming Booking. Your service is scheduled to start in 5 minutes.\n" +
+		"Thank you for choosing our services."
 	message := []byte("Subject: " + subject + "\r\n" + body)
 
 	err := smtp.SendMail(fmt.Sprintf("%s:%s", viper.GetString(config.EmailSMTPHost), viper.GetString(config.EmailSMTPPort)), auth, viper.GetString(config.EmailFromAddress), []string{receiverEmail}, message)
@@ -40,10 +39,8 @@ func (s *Service) CreateBooking(booking *models.Booking) (int, error) {
 	}
 
 	emailTime := booking.FromDate.Add(-5 * time.Minute)
-	durationToWait := emailTime.Sub(time.Now())
-
+	durationToWait := time.Until(emailTime)
 	if durationToWait > 0 {
-
 		users, err := s.db.ListUser(map[string]interface{}{"_id": booking.UserID})
 		if err != nil {
 			return 0, err
@@ -51,6 +48,13 @@ func (s *Service) CreateBooking(booking *models.Booking) (int, error) {
 		if len(users) > 0 {
 			user := users[0]
 			go scheduleEmail(user.Email, durationToWait)
+			penalitytime := booking.FromDate.Add(+10 * time.Minute)
+			go func() {
+				if err := s.applypenality(booking, time.Until(penalitytime)); err != nil {
+					// Handle the error (e.g., log it)
+					log.Printf("Error applying penalty: %v", err)
+				}
+			}()
 		} else {
 			return 0, errors.New("No given user find")
 		}
@@ -59,6 +63,15 @@ func (s *Service) CreateBooking(booking *models.Booking) (int, error) {
 	return bookingID, nil
 }
 
+func (s *Service) applypenality(booking *models.Booking, penalitytime time.Duration) error {
+	time.Sleep(penalitytime)
+	booking.Penalty = true
+	_, err := s.UpdateBooking(booking)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func scheduleEmail(email string, durationToWait time.Duration) {
 	time.Sleep(durationToWait)
 	sendEmail(email)
@@ -78,7 +91,8 @@ func (s *Service) UpdateBooking(booking *models.Booking) (int, error) {
 		return 0, errors.New("Cannot edit a confirmed booking")
 	}
 
-	timeDifference := existingBooking.FromDate.Sub(time.Now())
+	//timeDifference := existingBooking.FromDate.Sub(time.Now())
+	timeDifference := time.Until(existingBooking.FromDate)
 
 	if timeDifference < 48*time.Hour {
 
@@ -111,8 +125,8 @@ func (s *Service) DeleteBooking(bookingID int) error {
 		return errors.New("Cannot delete a confirmed booking")
 	}
 
-	timeDifference := booking.FromDate.Sub(time.Now())
-
+	//timeDifference := booking.FromDate.Sub(time.Now())
+	timeDifference := time.Until(booking.FromDate)
 	if timeDifference < 48*time.Hour {
 		return errors.New("Cannot delete a booking less than 48 hours before the booking time")
 	}
@@ -124,6 +138,7 @@ func (s *Service) DeleteBooking(bookingID int) error {
 func (s *Service) GetBooking(bookingID int) ([]*models.Booking, error) {
 	// Call the data layer method to retrieve the booking by ID.
 	booking, err := s.db.ListBooking(map[string]interface{}{"_id": bookingID})
+
 	if err != nil {
 
 		return nil, err

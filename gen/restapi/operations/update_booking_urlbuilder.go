@@ -9,11 +9,18 @@ import (
 	"errors"
 	"net/url"
 	golangswaggerpaths "path"
+	"strings"
+
+	"github.com/go-openapi/swag"
 )
 
 // UpdateBookingURL generates an URL for the update booking operation
 type UpdateBookingURL struct {
+	BookingID int64
+
 	_basePath string
+	// avoid unkeyed usage
+	_ struct{}
 }
 
 // WithBasePath sets the base path for this url builder, only required when it's different from the
@@ -35,7 +42,14 @@ func (o *UpdateBookingURL) SetBasePath(bp string) {
 func (o *UpdateBookingURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/booking"
+	var _path = "/booking/{bookingID}"
+
+	bookingID := swag.FormatInt64(o.BookingID)
+	if bookingID != "" {
+		_path = strings.Replace(_path, "{bookingID}", bookingID, -1)
+	} else {
+		return nil, errors.New("bookingId is required on UpdateBookingURL")
+	}
 
 	_basePath := o._basePath
 	if _basePath == "" {

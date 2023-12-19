@@ -57,46 +57,6 @@ func init() {
           }
         }
       },
-      "put": {
-        "operationId": "UpdateBooking",
-        "parameters": [
-          {
-            "description": "Booking object to update",
-            "name": "booking",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Booking"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": " updated successfully",
-            "schema": {
-              "$ref": "#/definitions/Booking"
-            }
-          },
-          "201": {
-            "description": "Booking updated successfully",
-            "schema": {
-              "$ref": "#/definitions/Booking"
-            }
-          },
-          "400": {
-            "description": "Bad Request - The request is invalid or contains errors"
-          },
-          "404": {
-            "description": "Booking not found"
-          },
-          "409": {
-            "description": "Booking already exists"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
       "post": {
         "operationId": "CreateBooking",
         "parameters": [
@@ -150,6 +110,53 @@ func init() {
           },
           "404": {
             "description": "Booking not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "operationId": "UpdateBooking",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Booking object to update",
+            "name": "bookingID",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Booking object to update",
+            "name": "booking",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Booking"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": " updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Booking"
+            }
+          },
+          "201": {
+            "description": "Booking updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Booking"
+            }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
+          },
+          "404": {
+            "description": "Booking not found"
+          },
+          "409": {
+            "description": "Booking already exists"
           },
           "500": {
             "description": "Internal Server Error"
@@ -287,43 +294,6 @@ func init() {
           }
         }
       },
-      "put": {
-        "operationId": "UpdateCar",
-        "parameters": [
-          {
-            "description": "CarRental object toupdate",
-            "name": "car",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CarRental"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": " updated successfully",
-            "schema": {
-              "$ref": "#/definitions/CarRental"
-            }
-          },
-          "201": {
-            "description": "CarRental updated successfully",
-            "schema": {
-              "$ref": "#/definitions/CarRental"
-            }
-          },
-          "400": {
-            "description": "Bad Request - The request is invalid or contains errors"
-          },
-          "404": {
-            "description": "CarRental not found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
       "post": {
         "operationId": "CreateCar",
         "parameters": [
@@ -383,6 +353,50 @@ func init() {
           }
         }
       },
+      "put": {
+        "operationId": "UpdateCar",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "CarRental ID to be updated",
+            "name": "carID",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "CarRental object toupdate",
+            "name": "car",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CarRental"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": " updated successfully",
+            "schema": {
+              "$ref": "#/definitions/CarRental"
+            }
+          },
+          "201": {
+            "description": "CarRental updated successfully",
+            "schema": {
+              "$ref": "#/definitions/CarRental"
+            }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
+          },
+          "404": {
+            "description": "CarRental not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
       "delete": {
         "operationId": "DeleteCar",
         "parameters": [
@@ -422,43 +436,6 @@ func init() {
           },
           "404": {
             "description": "Hotels not found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "put": {
-        "operationId": "UpdateHotel",
-        "parameters": [
-          {
-            "description": "Hotel object to  update",
-            "name": "hotel",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Hotel"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": " updated successfully",
-            "schema": {
-              "$ref": "#/definitions/Hotel"
-            }
-          },
-          "201": {
-            "description": "Hotel updated successfully",
-            "schema": {
-              "$ref": "#/definitions/Hotel"
-            }
-          },
-          "400": {
-            "description": "Bad Request - The request is invalid or contains errors"
-          },
-          "404": {
-            "description": "Hotel not found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -524,6 +501,50 @@ func init() {
           }
         }
       },
+      "put": {
+        "operationId": "UpdateHotel",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "id of hotel to be updated",
+            "name": "hotelID",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Hotel object to  update",
+            "name": "hotel",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Hotel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": " updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Hotel"
+            }
+          },
+          "201": {
+            "description": "Hotel updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Hotel"
+            }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
+          },
+          "404": {
+            "description": "Hotel not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
       "delete": {
         "operationId": "DeleteHotel",
         "parameters": [
@@ -563,43 +584,6 @@ func init() {
           },
           "404": {
             "description": "Rooms not found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "put": {
-        "operationId": "UpdateRoom",
-        "parameters": [
-          {
-            "description": "Room object to  update",
-            "name": "room",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Room"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Room updated successfully",
-            "schema": {
-              "$ref": "#/definitions/Room"
-            }
-          },
-          "201": {
-            "description": "Room updated successfully",
-            "schema": {
-              "$ref": "#/definitions/Room"
-            }
-          },
-          "400": {
-            "description": "Bad Request - The request is invalid or contains errors"
-          },
-          "404": {
-            "description": "Room not found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -665,6 +649,50 @@ func init() {
           }
         }
       },
+      "put": {
+        "operationId": "UpdateRoom",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "id of the room to be updated",
+            "name": "roomID",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Room object to  update",
+            "name": "room",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Room"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Room updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Room"
+            }
+          },
+          "201": {
+            "description": "Room updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Room"
+            }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
+          },
+          "404": {
+            "description": "Room not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
       "delete": {
         "operationId": "DeleteRoom",
         "parameters": [
@@ -704,43 +732,6 @@ func init() {
           },
           "404": {
             "description": "User not found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "put": {
-        "operationId": "UpdateUser",
-        "parameters": [
-          {
-            "description": "User object to update",
-            "name": "user",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User updated successfully",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          "201": {
-            "description": "User updated successfully",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          "400": {
-            "description": "Bad Request - The request is invalid or contains errors"
-          },
-          "404": {
-            "description": "User already exists"
           },
           "500": {
             "description": "Internal Server Error"
@@ -800,6 +791,50 @@ func init() {
           },
           "404": {
             "description": "User not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "operationId": "UpdateUser",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "id of object to update",
+            "name": "userID",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "User object to update",
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "201": {
+            "description": "User updated successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
+          },
+          "404": {
+            "description": "User already exists"
           },
           "500": {
             "description": "Internal Server Error"
@@ -967,46 +1002,6 @@ func init() {
           }
         }
       },
-      "put": {
-        "operationId": "UpdateBooking",
-        "parameters": [
-          {
-            "description": "Booking object to update",
-            "name": "booking",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Booking"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": " updated successfully",
-            "schema": {
-              "$ref": "#/definitions/Booking"
-            }
-          },
-          "201": {
-            "description": "Booking updated successfully",
-            "schema": {
-              "$ref": "#/definitions/Booking"
-            }
-          },
-          "400": {
-            "description": "Bad Request - The request is invalid or contains errors"
-          },
-          "404": {
-            "description": "Booking not found"
-          },
-          "409": {
-            "description": "Booking already exists"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
       "post": {
         "operationId": "CreateBooking",
         "parameters": [
@@ -1060,6 +1055,53 @@ func init() {
           },
           "404": {
             "description": "Booking not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "operationId": "UpdateBooking",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Booking object to update",
+            "name": "bookingID",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Booking object to update",
+            "name": "booking",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Booking"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": " updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Booking"
+            }
+          },
+          "201": {
+            "description": "Booking updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Booking"
+            }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
+          },
+          "404": {
+            "description": "Booking not found"
+          },
+          "409": {
+            "description": "Booking already exists"
           },
           "500": {
             "description": "Internal Server Error"
@@ -1197,43 +1239,6 @@ func init() {
           }
         }
       },
-      "put": {
-        "operationId": "UpdateCar",
-        "parameters": [
-          {
-            "description": "CarRental object toupdate",
-            "name": "car",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CarRental"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": " updated successfully",
-            "schema": {
-              "$ref": "#/definitions/CarRental"
-            }
-          },
-          "201": {
-            "description": "CarRental updated successfully",
-            "schema": {
-              "$ref": "#/definitions/CarRental"
-            }
-          },
-          "400": {
-            "description": "Bad Request - The request is invalid or contains errors"
-          },
-          "404": {
-            "description": "CarRental not found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
       "post": {
         "operationId": "CreateCar",
         "parameters": [
@@ -1293,6 +1298,50 @@ func init() {
           }
         }
       },
+      "put": {
+        "operationId": "UpdateCar",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "CarRental ID to be updated",
+            "name": "carID",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "CarRental object toupdate",
+            "name": "car",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CarRental"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": " updated successfully",
+            "schema": {
+              "$ref": "#/definitions/CarRental"
+            }
+          },
+          "201": {
+            "description": "CarRental updated successfully",
+            "schema": {
+              "$ref": "#/definitions/CarRental"
+            }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
+          },
+          "404": {
+            "description": "CarRental not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
       "delete": {
         "operationId": "DeleteCar",
         "parameters": [
@@ -1332,43 +1381,6 @@ func init() {
           },
           "404": {
             "description": "Hotels not found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "put": {
-        "operationId": "UpdateHotel",
-        "parameters": [
-          {
-            "description": "Hotel object to  update",
-            "name": "hotel",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Hotel"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": " updated successfully",
-            "schema": {
-              "$ref": "#/definitions/Hotel"
-            }
-          },
-          "201": {
-            "description": "Hotel updated successfully",
-            "schema": {
-              "$ref": "#/definitions/Hotel"
-            }
-          },
-          "400": {
-            "description": "Bad Request - The request is invalid or contains errors"
-          },
-          "404": {
-            "description": "Hotel not found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -1434,6 +1446,50 @@ func init() {
           }
         }
       },
+      "put": {
+        "operationId": "UpdateHotel",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "id of hotel to be updated",
+            "name": "hotelID",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Hotel object to  update",
+            "name": "hotel",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Hotel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": " updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Hotel"
+            }
+          },
+          "201": {
+            "description": "Hotel updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Hotel"
+            }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
+          },
+          "404": {
+            "description": "Hotel not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
       "delete": {
         "operationId": "DeleteHotel",
         "parameters": [
@@ -1473,43 +1529,6 @@ func init() {
           },
           "404": {
             "description": "Rooms not found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "put": {
-        "operationId": "UpdateRoom",
-        "parameters": [
-          {
-            "description": "Room object to  update",
-            "name": "room",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Room"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Room updated successfully",
-            "schema": {
-              "$ref": "#/definitions/Room"
-            }
-          },
-          "201": {
-            "description": "Room updated successfully",
-            "schema": {
-              "$ref": "#/definitions/Room"
-            }
-          },
-          "400": {
-            "description": "Bad Request - The request is invalid or contains errors"
-          },
-          "404": {
-            "description": "Room not found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -1575,6 +1594,50 @@ func init() {
           }
         }
       },
+      "put": {
+        "operationId": "UpdateRoom",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "id of the room to be updated",
+            "name": "roomID",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Room object to  update",
+            "name": "room",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Room"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Room updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Room"
+            }
+          },
+          "201": {
+            "description": "Room updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Room"
+            }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
+          },
+          "404": {
+            "description": "Room not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
       "delete": {
         "operationId": "DeleteRoom",
         "parameters": [
@@ -1614,43 +1677,6 @@ func init() {
           },
           "404": {
             "description": "User not found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "put": {
-        "operationId": "UpdateUser",
-        "parameters": [
-          {
-            "description": "User object to update",
-            "name": "user",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User updated successfully",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          "201": {
-            "description": "User updated successfully",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          "400": {
-            "description": "Bad Request - The request is invalid or contains errors"
-          },
-          "404": {
-            "description": "User already exists"
           },
           "500": {
             "description": "Internal Server Error"
@@ -1710,6 +1736,50 @@ func init() {
           },
           "404": {
             "description": "User not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "operationId": "UpdateUser",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "id of object to update",
+            "name": "userID",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "User object to update",
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "201": {
+            "description": "User updated successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Bad Request - The request is invalid or contains errors"
+          },
+          "404": {
+            "description": "User already exists"
           },
           "500": {
             "description": "Internal Server Error"

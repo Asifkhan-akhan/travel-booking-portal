@@ -12,6 +12,8 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 
 	"travel-booking-portal/gen/models"
@@ -39,6 +41,11 @@ type UpdateBookingParams struct {
 	  In: body
 	*/
 	Booking *models.Booking
+	/*Booking object to update
+	  Required: true
+	  In: path
+	*/
+	BookingID int64
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -77,8 +84,32 @@ func (o *UpdateBookingParams) BindRequest(r *http.Request, route *middleware.Mat
 	} else {
 		res = append(res, errors.Required("booking", "body", ""))
 	}
+
+	rBookingID, rhkBookingID, _ := route.Params.GetOK("bookingID")
+	if err := o.bindBookingID(rBookingID, rhkBookingID, route.Formats); err != nil {
+		res = append(res, err)
+	}
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+// bindBookingID binds and validates parameter BookingID from path.
+func (o *UpdateBookingParams) bindBookingID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: true
+	// Parameter is provided by construction from the route
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("bookingID", "path", "int64", raw)
+	}
+	o.BookingID = value
+
 	return nil
 }

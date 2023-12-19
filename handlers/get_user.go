@@ -20,6 +20,7 @@ type getUserHandler struct {
 // Handle the get user request
 func (d *getUserHandler) Handle(params operations.GetUserParams) middleware.Responder {
 	users, err := d.rt.Service().GetUser(int(params.UserID))
+
 	if err != nil {
 
 		return operations.NewGetUserInternalServerError()
