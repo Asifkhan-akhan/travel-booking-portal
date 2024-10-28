@@ -274,4 +274,4 @@ func Test_client_ListRooms(t *testing.T) {
 			t.Logf("Got %v", rooms)
 		})
 	}
-}
+ }
