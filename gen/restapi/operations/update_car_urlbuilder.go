@@ -9,11 +9,18 @@ import (
 	"errors"
 	"net/url"
 	golangswaggerpaths "path"
+	"strings"
+
+	"github.com/go-openapi/swag"
 )
 
 // UpdateCarURL generates an URL for the update car operation
 type UpdateCarURL struct {
+	CarID int64
+
 	_basePath string
+	// avoid unkeyed usage
+	_ struct{}
 }
 
 // WithBasePath sets the base path for this url builder, only required when it's different from the
@@ -35,7 +42,14 @@ func (o *UpdateCarURL) SetBasePath(bp string) {
 func (o *UpdateCarURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/car"
+	var _path = "/car/{carID}"
+
+	carID := swag.FormatInt64(o.CarID)
+	if carID != "" {
+		_path = strings.Replace(_path, "{carID}", carID, -1)
+	} else {
+		return nil, errors.New("carId is required on UpdateCarURL")
+	}
 
 	_basePath := o._basePath
 	if _basePath == "" {

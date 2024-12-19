@@ -30,7 +30,7 @@ func NewUpdateRoom(ctx *middleware.Context, handler UpdateRoomHandler) *UpdateRo
 }
 
 /*
-	UpdateRoom swagger:route PUT /room updateRoom
+	UpdateRoom swagger:route PUT /room/{roomID} updateRoom
 
 UpdateRoom update room API
 */
